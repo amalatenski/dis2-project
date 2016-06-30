@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Input;
+using System.Windows;
 
 namespace Test
 {
@@ -24,7 +26,6 @@ namespace Test
 
         private Rectangle slider;
         private bool dragMode = false;
-        HandEventArgs.HandSide dragSide;
 
         //Constructor calls base class constructor of Control
         public MuGetSlider(String text, Int32 x, Int32 y, Int32 width, Int32 height)
@@ -38,46 +39,69 @@ namespace Test
         {
             //draws the line of the slider and the slider
             Graphics g = e.Graphics;
-            g.DrawLine(linePen, new Point(sliderLineOffset, (int)this.Height/2), new Point(this.Width-sliderLineOffset, this.Height/2));
+            g.DrawLine(linePen, new System.Drawing.Point(sliderLineOffset, (int)this.Height/2), new System.Drawing.Point(this.Width-sliderLineOffset, this.Height/2));
             g.FillRectangle(sliderBrush, slider);
 
             //calls the OnPaint of the base class. Without this the border would disappear.
             base.OnPaint(e);
         }
 
-        public override void HandStateChanged(HandEventArgs e)
+        
+        protected override void OnMouseDown(System.Windows.Forms.MouseEventArgs e)
         {
-            //checks for the new hand state
-            if (e.getHandState() == HandEventArgs.HandState.Closed)
+            base.OnMouseDown(e);
+            if (slider.Contains(new System.Drawing.Point(e.X, e.Y)))
             {
-                //checks if the hand position is within the slider. The coordinates are relative to the widget coordinates (not application).
-                if (slider.Contains(new Point(e.getHandX(), e.getHandY())))
-                {
-                    dragSide = e.agent;
-                    dragMode = true;
-                }
-            }
-            else
-            {
-                if (e.agent == dragSide)
-                {
-                    dragMode = false;
-                }
+                dragMode = true;
             }
         }
 
-        public override void HandMoved(HandEventArgs e)
+        protected override void OnMouseUp(System.Windows.Forms.MouseEventArgs e)
         {
-            //checks if in drag mode
+            base.OnMouseUp(e);
+            dragMode = false;
+        }
+
+        protected override void OnMouseMove(System.Windows.Forms.MouseEventArgs e)
+        {
+            base.OnMouseMove(e);
             if(dragMode)
             {
-                slider.X = e.getHandX() - sliderWidth/2;
+                slider.X = e.X - sliderWidth/2;
 
                 if (slider.X < 10) { slider.X = 10; }
                 if (slider.X > this.Width - sliderLineOffset - sliderWidth) { slider.X = this.Width - sliderLineOffset - sliderWidth; }
             }
-            //repaints the widget. Without this the changes would not appear instantly.
             this.Refresh();
         }
+
+        //old code that is maybe useful later on
+        //public void HandStateChanged(TouchEventArgs e)
+        //{
+        //    System.Windows.Point tmp = e.TouchDevice.GetTouchPoint((IInputElement)this).Position;
+        //    if (slider.Contains(new System.Drawing.Point((int)tmp.X, (int)tmp.Y)))
+        //    {
+        //        dragMode = true;
+        //    }
+        //    else
+        //    {
+        //        dragMode = false;
+
+        //    }
+        //}
+
+        //public void HandMoved(TouchEventArgs e)
+        //{
+        //    //checks if in drag mode
+        //    if (dragMode)
+        //    {
+        //        slider.X = e.getHandX() - sliderWidth / 2;
+
+        //        if (slider.X < 10) { slider.X = 10; }
+        //        if (slider.X > this.Width - sliderLineOffset - sliderWidth) { slider.X = this.Width - sliderLineOffset - sliderWidth; }
+        //    }
+        //    //repaints the widget. Without this the changes would not appear instantly.
+        //    this.Refresh();
+        //}
     }
 }

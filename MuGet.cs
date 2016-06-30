@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Input;
 
 namespace Test
 {
@@ -45,38 +46,24 @@ namespace Test
 
         //Events
         //Override to handle event
-        public virtual void HandStateChanged(HandEventArgs e)
+        protected override void OnMouseClick(System.Windows.Forms.MouseEventArgs e)
+        {
+            Console.WriteLine("test");
+        }
+        
+        protected override void OnMouseDown(System.Windows.Forms.MouseEventArgs e)
+        {
+ 	         
+        }
+
+        protected override void OnMouseUp(System.Windows.Forms.MouseEventArgs e)
+        {
+            Console.WriteLine("mouse up");
+        }
+
+        protected override void OnMouseMove(System.Windows.Forms.MouseEventArgs e)
         {
 
         }
-
-        public virtual void HandMoved(HandEventArgs e)
-        {
-
-        }
-
-        public virtual void HandEntered(HandEventArgs e)
-        {
-            this.BackColor = hoverColor;
-            this.currentPen = hoverPen;
-        }
-
-        //creates the hover effect for the widget
-        public virtual void HandLeft(HandEventArgs e)
-        {
-            this.BackColor = backgroundColor;
-            this.currentPen = borderPen;
-        }
-
-        public virtual void HandDragged(HandEventArgs e)
-        {
-
-        }
-
-        public virtual void HandClicked(HandEventArgs e)
-        {
-
-        }
-
     }
 }
