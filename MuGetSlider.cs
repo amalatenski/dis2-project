@@ -69,39 +69,14 @@ namespace Test
             {
                 slider.X = e.X - sliderWidth/2;
 
-                if (slider.X < 10) { slider.X = 10; }
+                if (slider.X < sliderLineOffset) { slider.X = sliderLineOffset; }
                 if (slider.X > this.Width - sliderLineOffset - sliderWidth) { slider.X = this.Width - sliderLineOffset - sliderWidth; }
+
+                //Raises an event that gives the slider position between 0 and 1 as a string.
+                UpdateStatus(((double)(slider.X - sliderLineOffset) / (double)(this.Width - 2 * sliderLineOffset)).ToString());
             }
+            //Repaints the widget. Othewise the new position would not be drawn.
             this.Refresh();
         }
-
-        //old code that is maybe useful later on
-        //public void HandStateChanged(TouchEventArgs e)
-        //{
-        //    System.Windows.Point tmp = e.TouchDevice.GetTouchPoint((IInputElement)this).Position;
-        //    if (slider.Contains(new System.Drawing.Point((int)tmp.X, (int)tmp.Y)))
-        //    {
-        //        dragMode = true;
-        //    }
-        //    else
-        //    {
-        //        dragMode = false;
-
-        //    }
-        //}
-
-        //public void HandMoved(TouchEventArgs e)
-        //{
-        //    //checks if in drag mode
-        //    if (dragMode)
-        //    {
-        //        slider.X = e.getHandX() - sliderWidth / 2;
-
-        //        if (slider.X < 10) { slider.X = 10; }
-        //        if (slider.X > this.Width - sliderLineOffset - sliderWidth) { slider.X = this.Width - sliderLineOffset - sliderWidth; }
-        //    }
-        //    //repaints the widget. Without this the changes would not appear instantly.
-        //    this.Refresh();
-        //}
     }
 }

@@ -12,6 +12,8 @@ namespace Test
     //public delegate void HandEventHandler (HandEventArgs e);
     class MuGet : Control
     {
+        public delegate void StatusUpdateHandler(object sender, StatusEventArgs e);
+        public event StatusUpdateHandler OnUpdateStatus;
         //default colors and stuff
         private static Pen borderPen = System.Drawing.Pens.Black;
         private static Color backgroundColor = Color.LightGray;
@@ -44,11 +46,26 @@ namespace Test
             base.OnPaint(e);
         }
 
+
         //Events
-        //Override to handle event
+        //Gets raised by the application on each beat. Measure the time difference between occurance to get the current speed.
+        public virtual void OnBeat()
+        {
+
+        }
+
+        //Gets raised on the beginning on each bar/takt.
+        public virtual void OnBar()
+        {
+
+        }
+
+        //Override to handle event. They say mouse, but it should work with touch.
+
+        //Dont know if this gets called...
         protected override void OnMouseClick(System.Windows.Forms.MouseEventArgs e)
         {
-            Console.WriteLine("test");
+
         }
         
         protected override void OnMouseDown(System.Windows.Forms.MouseEventArgs e)
@@ -58,12 +75,23 @@ namespace Test
 
         protected override void OnMouseUp(System.Windows.Forms.MouseEventArgs e)
         {
-            Console.WriteLine("mouse up");
+
         }
 
         protected override void OnMouseMove(System.Windows.Forms.MouseEventArgs e)
         {
 
+        }
+
+        //throws event
+        protected void UpdateStatus(string status)
+        {
+            // check if subscribers exist
+            if (OnUpdateStatus == null) return;
+
+            //sends the content of the string to all subscribers. put all relevant information in there.
+            StatusEventArgs args = new StatusEventArgs(status);
+            OnUpdateStatus(this, args);
         }
     }
 }
