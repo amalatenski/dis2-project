@@ -22,10 +22,16 @@ namespace Test
 
         private Pen currentPen;
 
+        public static int beatLength { get; set; }
+        //# beats in a takt.. standard 4
+        public static int taktLength { get; set; }
+
         //Constructor calls base class constructor of Control
         public MuGet(String text, Int32 x, Int32 y, Int32 width, Int32 height)
             : base(text, x, y, width, height)
         {
+            if(beatLength == null) beatLength = 100;
+            if (taktLength == null) taktLength = 4;
             currentPen = borderPen;
             this.BackColor = backgroundColor;
         }
