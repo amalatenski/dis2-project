@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -22,16 +22,30 @@ namespace Test
 
         private Pen currentPen;
 
-        public static int beatLength { get; set; }
+        //# beats per minute.. standard 120
+        public static double Bpm { get; set; }
         //# beats in a takt.. standard 4
-        public static int taktLength { get; set; }
+        public static int TaktLength { get; set; }
+        //# ms in a beat.. standard 500 (because 120 bpm is standard)
+        public static int BeatLength {
+          get {
+            return (int)(1000 * (60 / Bpm));   // Unit check:  1000 = ms/s , Bpm = Beats/min , 60 = s/min   =>   (60 / Bpm) = s/Beat   =>   1000 * (Bpm / 60) = ms/Beat
+          }
+          set {
+            Bpm = (1000.0 / value) * 60;   // Unit check:  1000.0 = ms/s , value = ms/Beat , 60 = s/min   =>   (1000.0 / value) = Beats/s   =>   (1000.0 / value) * 60 = Beats/min
+          }
+        }
+
+        //Static constructor to set Bpm and TaktLength (and thus also BeatLength) defaults
+        static MuGet() {
+          Bpm = 120;
+          TaktLength = 4;
+        }
 
         //Constructor calls base class constructor of Control
         public MuGet(String text, Int32 x, Int32 y, Int32 width, Int32 height)
             : base(text, x, y, width, height)
         {
-            if(beatLength == null) beatLength = 100;
-            if (taktLength == null) taktLength = 4;
             currentPen = borderPen;
             this.BackColor = backgroundColor;
         }
