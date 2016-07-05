@@ -24,6 +24,9 @@ namespace Test
         private static Brush timerRecordBrush = System.Drawing.Brushes.Blue;
         private static Brush timerPlayBrush = System.Drawing.Brushes.Green;
 
+        private static int timerInnerCircleSize = 25;
+        private static int timerLineThickness = 2;
+
         /*
         Bitmap recordEmptyIcon = new Bitmap("C:/Users/amala_000/Documents/icons/recordEmpty.png");
         Bitmap recordingIcon = new Bitmap("C:/Users/amala_000/Documents/icons/record.png");
@@ -44,14 +47,20 @@ namespace Test
         private Rectangle buttonMuteIcon;
         private Rectangle buttonPlayIcon;
 
+        private Rectangle timer;
+        private Rectangle timerInnerCircle;
+
         private bool dragMode = false;
 
         private int widgetWidth;
         private int widgetHeight;
         private int gap;
         private int buttonX;
-        private int timerMidX;
-        private int timerMidY;
+
+        private System.Drawing.Point timerMid = new System.Drawing.Point();
+        private int timerRadius;
+
+        private double taktPercent = 0;
 
         //Constructor calls base class constructor of Control
         public MuGetLoop(String text, Int32 x, Int32 y, Int32 width, Int32 height)
@@ -96,10 +105,17 @@ namespace Test
             buttonRecordIcon = new System.Drawing.Rectangle(buttonRecordIconPosX, buttonRecordIconPosY, recordIconSizeX, recordIconSizeY);
             buttonMuteIcon = new System.Drawing.Rectangle(buttonMuteIconPosX, buttonMuteIconPosY, muteIconSize, muteIconSize);
             buttonPlayIcon = new System.Drawing.Rectangle(buttonPlayIconPosX, buttonPlayIconPosY, playIconSize, playIconSize);
+
+            //timer properties
+            timer = new Rectangle(gap, gap, widgetHeight - 2 * gap, widgetHeight - 2 * gap);
+            timerMid = getMidpoint(timer);
+            timerRadius = timer.Height / 2;
+            timerInnerCircle = getRectangleAroundPoint(timerMid.X, timerMid.Y, timerInnerCircleSize, timerInnerCircleSize);
         }
 
         protected override void OnPaint(PaintEventArgs e)
         {
+
             //draws the timer and the buttons
             Graphics g = e.Graphics;
             
@@ -107,15 +123,12 @@ namespace Test
             g.FillRectangle(buttonBrush, buttonMute);
             g.FillRectangle(buttonBrush, buttonPlay);
 
-            g.FillEllipse(timerBrush, new Rectangle(gap, gap, buttonX - 2 * gap, widgetHeight - 2 * gap));
-            timerMidX = (int)(gap + (buttonX - 2 * gap) / 2);
-            timerMidY = (int)(gap + (widgetHeight - 2 * gap) / 2);
-
-            /*
+            g.FillEllipse(timerBrush, timer);
+            g.FillEllipse(buttonBrush, timerInnerCircle);
+            
             g.DrawImage(recordEmptyIcon, buttonRecordIcon);
             g.DrawImage(soundIcon, buttonMuteIcon);
             g.DrawImage(pauseIcon, buttonPlayIcon);
-            */
             
             //calls the OnPaint of the base class. Without this the border would disappear.
             base.OnPaint(e);
@@ -135,6 +148,14 @@ namespace Test
         {
             base.OnMouseUp(e);
             dragMode = false;
+
+            //helping variable
+            taktPercent += 0.5;
+            if (taktPercent >= 100)
+            {
+                taktPercent -= 100;
+            }
+            Console.WriteLine(taktPercent);
         }
 
         protected override void OnMouseMove(System.Windows.Forms.MouseEventArgs e)
@@ -148,6 +169,24 @@ namespace Test
                 if (slider.X > this.Width - sliderLineOffset - sliderWidth) { slider.X = this.Width - sliderLineOffset - sliderWidth; }
             }
             this.Refresh();*/
+        }
+
+        private System.Drawing.Point getMidpoint(Rectangle rect)
+        {
+            System.Drawing.Point mid = new System.Drawing.Point();
+            mid.X = (int)(rect.X + rect.Width / 2);
+            mid.Y = (int)(rect.Y + rect.Height / 2);
+            return mid;
+            
+        }
+
+        private Rectangle getRectangleAroundPoint(int x, int y, int sizeX, int sizeY)
+        {
+            int rectX = (int)(x - sizeX / 2);
+            int rectY = (int)(y - sizeY / 2);
+
+            Rectangle rect = new Rectangle(rectX, rectY, sizeX, sizeY);
+            return rect;
         }
 
         //old code that is maybe useful later on
