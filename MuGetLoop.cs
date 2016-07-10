@@ -20,6 +20,7 @@ namespace Test
         private static Pen linePen = System.Drawing.Pens.Black;
         private static Pen thickPen = new Pen(Color.FromArgb(255, 0, 0, 0), 3);
         //Brushes are used to fill objects.
+        private static Brush inactiveBrush = System.Drawing.Brushes.DarkGray;
         private static Brush backgroundBrush = System.Drawing.Brushes.LightGray;
         private static Brush buttonBrush = System.Drawing.Brushes.Red;
         private static Brush timerBrush = System.Drawing.Brushes.Lime;
@@ -34,10 +35,21 @@ namespace Test
 
         System.Diagnostics.Stopwatch stopwatch;
 
-        enum ButtonStates {RecordEmpty, Recording, StoppedRecording, Sound, Mute, Playing, Stopping};
+        System.Diagnostics.Stopwatch buttonHighlight;
+        private int highlightTime = 150;
+
+        enum ButtonStates { RecordEmpty, WaitingToRecord, Recording, WaitingToEndRecord, StoppedRecording, Sound, Mute, Playing, Stopping };
         ButtonStates Mic;
         ButtonStates Volume;
         ButtonStates Play;
+
+        private bool waitingToRecord = false;
+        private bool waitingToEndRecord = false;
+        private bool recordInside = false;
+
+        private bool buttonRecordPushed = false;
+        private bool buttonMutePushed = false;
+        private bool buttonPlayPushed = false;
 
         private static int timerInnerCircleSize = 25;
         private static int timerLineThickness = 2;
@@ -148,7 +160,8 @@ namespace Test
             time = new System.Windows.Forms.Timer();
             refresh = new System.Windows.Forms.Timer();
             stopwatch = new System.Diagnostics.Stopwatch();
-            
+            buttonHighlight = new System.Diagnostics.Stopwatch();
+
             //register EventHandler for timer
             time.Tick += new EventHandler(time_tick);
             time.Interval = taktInMS;
@@ -167,34 +180,113 @@ namespace Test
 
         protected override void OnPaint(PaintEventArgs e)
         {
-
-            //draws the timer and the buttons
             Graphics g = e.Graphics;
-            
+
+            //button color
             g.FillRectangle(buttonBrush, buttonRecord);
-            g.FillRectangle(buttonBrush, buttonMute);
-            g.FillRectangle(buttonBrush, buttonPlay);
 
-            g.DrawRectangle(linePen, buttonRecord);
-            g.DrawRectangle(linePen, buttonMute);
-            g.DrawRectangle(linePen, buttonPlay);
+            if (Mic == ButtonStates.StoppedRecording)
+            {
+                g.FillRectangle(buttonBrush, buttonMute);
+                g.FillRectangle(buttonBrush, buttonPlay);
+            }
+            else
+            {
+                g.FillRectangle(inactiveBrush, buttonMute);
+                g.FillRectangle(inactiveBrush, buttonPlay);
+            }
 
+            //button outline
+            if (Mic == ButtonStates.WaitingToRecord ||
+                Mic == ButtonStates.WaitingToEndRecord ||
+                (buttonRecordPushed && buttonHighlight.ElapsedMilliseconds < highlightTime))
+            {
+                g.DrawRectangle(thickPen, buttonRecord);
+            }
+            else
+            {
+                g.DrawRectangle(linePen, buttonRecord);
+            }
+
+            if (buttonMutePushed && buttonHighlight.ElapsedMilliseconds < highlightTime)
+            {
+                g.DrawRectangle(thickPen, buttonMute);
+            }
+            else
+            {
+                g.DrawRectangle(linePen, buttonMute);
+            }
+
+            if (buttonPlayPushed && buttonHighlight.ElapsedMilliseconds < highlightTime)
+            {
+                g.DrawRectangle(thickPen, buttonPlay);
+            }
+            else
+            {
+                g.DrawRectangle(linePen, buttonPlay);
+            }
+
+            //counter
             g.FillRectangle(buttonBrush, counter);
             g.FillEllipse(backgroundBrush, counterCurve);
 
+            //timer
             g.FillEllipse(timerBrush, timer);
             g.DrawEllipse(linePen, timer);
 
+            //starting marker
             g.DrawLine(linePen, timerMid, getPointOnCircle(0.0));
-            g.DrawLine(thickPen, timerMid, getPointOnCircle(getTaktRatio()));
 
+            //moving marker
+            if (Mic == ButtonStates.RecordEmpty)
+            {
+                g.DrawLine(thickPen, timerMid, getPointOnCircle(0.0));
+            }
+            else if (Mic == ButtonStates.WaitingToRecord)
+            {
+                g.FillPie(timerRecordBrush, timer, getAngle(0.0), getAngle(0.2));
+                
+            }
+            else if (Mic == ButtonStates.Recording ||
+                     Mic == ButtonStates.WaitingToEndRecord)
+            {
+                g.DrawLine(thickPen, timerMid, getPointOnCircle(getTaktRatio()));
+            }
+            else if (Mic == ButtonStates.StoppedRecording &&
+                     Play == ButtonStates.Playing)
+            {
+                
+            }
+            else if (Mic == ButtonStates.StoppedRecording &&
+                     Play == ButtonStates.Stopping)
+            {
+
+            }
+
+            //inner circle
             g.FillEllipse(buttonBrush, timerInnerCircle);
 
+            //places icons
             if (Mic == ButtonStates.RecordEmpty)
             {
                 g.DrawImage(recordEmptyIcon, buttonRecordIcon);
             }
+            else if (Mic == ButtonStates.WaitingToRecord)
+            {
+                if (recordInside)
+                {
+                    g.DrawImage(stopRecordingIcon, buttonRecordIcon);
+                }
+                else
+                {
+                    g.DrawImage(recordEmptyIcon, buttonRecordIcon);
+                }
+            }
             else if (Mic == ButtonStates.Recording)
+            {
+                g.DrawImage(recordingIcon, buttonRecordIcon);
+            }
+            else if (Mic == ButtonStates.WaitingToEndRecord)
             {
                 g.DrawImage(recordingIcon, buttonRecordIcon);
             }
@@ -229,16 +321,29 @@ namespace Test
         protected override void OnMouseDown(System.Windows.Forms.MouseEventArgs e)
         {
             base.OnMouseDown(e);
-            /*if (slider.Contains(new System.Drawing.Point(e.X, e.Y)))
+
+            if (buttonRecord.Contains(new System.Drawing.Point(e.X, e.Y)))
             {
-                dragMode = true;
-            }*/
+                buttonRecordPushed = true;
+                buttonHighlight.Restart();
+            }
+
+            if (buttonMute.Contains(new System.Drawing.Point(e.X, e.Y)))
+            {
+                buttonMutePushed = true;
+                buttonHighlight.Restart();
+            }
+
+            if (buttonPlay.Contains(new System.Drawing.Point(e.X, e.Y)))
+            {
+                buttonPlayPushed = true;
+                buttonHighlight.Restart();
+            }
         }
 
         protected override void OnMouseUp(System.Windows.Forms.MouseEventArgs e)
         {
             base.OnMouseUp(e);
-            dragMode = false;
 
             //Console.WriteLine(getTaktRatio());
         }
@@ -311,8 +416,20 @@ namespace Test
 
         }
 
+        //returns the circular angle (between 0 and 360) of a ratio (between 0 and 1)
+        private float getAngle(double ratio)
+        {
+            float var = (float)(ratio * 360);
+            if (var < 90)
+            {
+                //var += 270;
+            }
+            return var;
+        }
+
         private void time_tick(object source, EventArgs e)
         {
+            onBar();
             stopwatch.Restart();
             if (true)
             {
@@ -327,8 +444,32 @@ namespace Test
 
         private void refresh_tick(object source, EventArgs e)
         {
+            if (buttonHighlight.ElapsedMilliseconds > highlightTime)
+            {
+                buttonRecordPushed = false;
+                buttonMutePushed = false;
+                buttonPlayPushed = false;
+            }
+
             this.Refresh();
         }
+
+        private void onBar()
+        {
+            if (Mic == ButtonStates.WaitingToRecord &&
+                waitingToRecord)
+            {
+                Mic = ButtonStates.Recording;
+                waitingToRecord = false;
+            }
+            else if (Mic == ButtonStates.WaitingToEndRecord &&
+                waitingToEndRecord)
+            {
+                Mic = ButtonStates.StoppedRecording;
+                recordInside = true;
+            }
+        }
+
 
         //returns the elapsed time value since the last takt (between 0 and 1)
         private double getTaktRatio()
@@ -344,40 +485,77 @@ namespace Test
             {
                 if (Mic == ButtonStates.RecordEmpty)
                 {
-                    Mic = ButtonStates.Recording;
+                    Mic = ButtonStates.WaitingToRecord;
+
+                    waitingToRecord = true;
+                }
+                else if (Mic == ButtonStates.WaitingToRecord)
+                {
+                    if (recordInside)
+                    {
+                        Mic = ButtonStates.StoppedRecording;
+                    }
+                    else
+                    {
+                        Mic = ButtonStates.RecordEmpty;
+                    }
+                    
+                    waitingToRecord = false;
                 }
                 else if (Mic == ButtonStates.Recording)
                 {
-                    Mic = ButtonStates.StoppedRecording;
+                    Mic = ButtonStates.WaitingToEndRecord;
+
+                    waitingToEndRecord = true;
+                }
+                else if (Mic == ButtonStates.WaitingToEndRecord)
+                {
+                    Mic = ButtonStates.Recording;
+
+                    waitingToEndRecord = false;
                 }
                 else if (Mic == ButtonStates.StoppedRecording)
                 {
-                    Mic = ButtonStates.Recording;
+                    Mic = ButtonStates.WaitingToRecord;
+
+                    waitingToRecord = true;
                 }
             }
             else if (buttonMute == rect)
             {
-                if (Volume == ButtonStates.Sound)
+                if (Mic == ButtonStates.StoppedRecording)
                 {
-                    Volume = ButtonStates.Mute;
-                }
-                else if (Volume == ButtonStates.Mute)
-                {
-                    Volume = ButtonStates.Sound;
+                    if (Volume == ButtonStates.Sound)
+                    {
+                        Volume = ButtonStates.Mute;
+                    }
+                    else if (Volume == ButtonStates.Mute)
+                    {
+                        Volume = ButtonStates.Sound;
+                    }
                 }
             }
             else if (buttonPlay == rect)
             {
-                if (Play == ButtonStates.Playing)
+                if (Mic == ButtonStates.StoppedRecording)
                 {
-                    Play = ButtonStates.Stopping;
-                }
-                else if (Play == ButtonStates.Stopping)
-                {
-                    Play = ButtonStates.Playing;
+                    if (Play == ButtonStates.Playing)
+                    {
+                        Play = ButtonStates.Stopping;
+                    }
+                    else if (Play == ButtonStates.Stopping)
+                    {
+                        Play = ButtonStates.Playing;
+                    }
                 }
             }
+
+            buttonStateHandler();
         }
 
+        private void buttonStateHandler()
+        {
+
+        }
     }
 }
