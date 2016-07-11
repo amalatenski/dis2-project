@@ -23,9 +23,9 @@ namespace Test
         private static Brush inactiveBrush = System.Drawing.Brushes.DarkGray;
         private static Brush backgroundBrush = System.Drawing.Brushes.LightGray;
         private static Brush buttonBrush = System.Drawing.Brushes.Red;
-        private static Brush timerBrush = System.Drawing.Brushes.Lime;
-        private static Brush timerRecordBrush = System.Drawing.Brushes.Blue;
-        private static Brush timerPlayBrush = System.Drawing.Brushes.Green;
+        private static Brush timerBrush = System.Drawing.Brushes.DarkGray;
+        private static Brush timerRecordBrush = System.Drawing.Brushes.Aquamarine;
+        private static Brush timerPlayBrush = System.Drawing.Brushes.Orange;
 
         private System.Windows.Forms.Timer time;
         private int taktInMS = 3600;
@@ -52,7 +52,6 @@ namespace Test
         private bool buttonPlayPushed = false;
 
         private static int timerInnerCircleSize = 25;
-        private static int timerLineThickness = 2;
 
         Bitmap recordEmptyIcon = new Bitmap("C:/Users/amala_000/Documents/icons/recordEmpty.png");
         Bitmap recordingIcon = new Bitmap("C:/Users/amala_000/Documents/icons/recording.png");
@@ -63,8 +62,9 @@ namespace Test
 
         Bitmap pauseIcon = new Bitmap("C:/Users/amala_000/Documents/icons/pause.png");
         Bitmap playIcon = new Bitmap("C:/Users/amala_000/Documents/icons/play.png");
-        
-        
+
+        Bitmap waitingPie;
+
         private Rectangle buttonRecord;
         private Rectangle buttonMute;
         private Rectangle buttonPlay;
@@ -182,6 +182,8 @@ namespace Test
         {
             Graphics g = e.Graphics;
 
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+
             //button color
             g.FillRectangle(buttonBrush, buttonRecord);
 
@@ -231,7 +233,22 @@ namespace Test
             g.FillEllipse(backgroundBrush, counterCurve);
 
             //timer
-            g.FillEllipse(timerBrush, timer);
+            if ((Mic == ButtonStates.RecordEmpty ||
+                Mic == ButtonStates.WaitingToRecord) &&
+                !recordInside)
+            {
+                g.FillEllipse(inactiveBrush, timer);
+            }
+            else if (Mic == ButtonStates.Recording ||
+                Mic == ButtonStates.WaitingToEndRecord)
+            {
+                g.FillEllipse(timerRecordBrush, timer);
+            }
+            else
+            {
+                g.FillEllipse(timerPlayBrush, timer);
+            }
+
             g.DrawEllipse(linePen, timer);
 
             //starting marker
@@ -244,23 +261,35 @@ namespace Test
             }
             else if (Mic == ButtonStates.WaitingToRecord)
             {
-                g.FillPie(timerRecordBrush, timer, getAngle(0.0), getAngle(0.2));
-                
+                waitingPie = getBmpPie(timerRecordBrush);
+
+                g.DrawImage(waitingPie, timer.X, timer.Y);
+
+                g.DrawEllipse(linePen, timer);
             }
-            else if (Mic == ButtonStates.Recording ||
-                     Mic == ButtonStates.WaitingToEndRecord)
+            else if (Mic == ButtonStates.WaitingToEndRecord)
             {
-                g.DrawLine(thickPen, timerMid, getPointOnCircle(getTaktRatio()));
+                waitingPie = getBmpPie(timerPlayBrush);
+
+                g.DrawImage(waitingPie, timer.X, timer.Y);
+
+                g.DrawEllipse(linePen, timer);
             }
             else if (Mic == ButtonStates.StoppedRecording &&
                      Play == ButtonStates.Playing)
             {
-                
+                g.DrawLine(thickPen, timerMid, getPointOnCircle(getTaktRatio()));
             }
             else if (Mic == ButtonStates.StoppedRecording &&
                      Play == ButtonStates.Stopping)
             {
 
+            }
+            if (Mic == ButtonStates.Recording ||
+                Mic == ButtonStates.WaitingToRecord ||
+                Mic == ButtonStates.WaitingToEndRecord)
+            {
+                g.DrawLine(thickPen, timerMid, getPointOnCircle(getTaktRatio()));
             }
 
             //inner circle
@@ -427,19 +456,26 @@ namespace Test
             return var;
         }
 
+        private Bitmap getBmpPie(Brush pieBrush)
+        {
+            Bitmap bmp = new Bitmap(2 * timerRadius, 2 * timerRadius);
+            Rectangle bmpRect = new Rectangle(0, 0, 2 * timerRadius, 2 * timerRadius);
+
+            using (Graphics gfx = Graphics.FromImage(bmp))
+            {
+                gfx.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+                gfx.FillPie(pieBrush, bmpRect, getAngle(0.0), getAngle(getTaktRatio()));
+            }
+
+            bmp.RotateFlip(RotateFlipType.Rotate270FlipNone);
+
+            return bmp;
+        }
+
         private void time_tick(object source, EventArgs e)
         {
             onBar();
             stopwatch.Restart();
-            if (true)
-            {
-                //this.Refresh();
-
-            }
-            else
-            {
-                //time.Stop();
-            }
         }
 
         private void refresh_tick(object source, EventArgs e)
