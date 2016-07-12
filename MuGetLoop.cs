@@ -28,12 +28,27 @@ namespace Test
         private static Brush timerPlayBrush = System.Drawing.Brushes.Orange;
 
         private System.Windows.Forms.Timer time;
-        private int taktInMS = 3600;
+        private int taktInMS = 3000;
+
+        private System.Windows.Forms.Timer playStopTime;
+        private int loopInMS;
+        private int nrOfTakts;
 
         private System.Windows.Forms.Timer refresh;
         private int refreshRate = 15;
 
+        private string labelTakts;
+        System.Drawing.Font labelFont;
+        System.Drawing.SolidBrush labelBrush;
+        System.Drawing.StringFormat labelFormat;
+        int labelX;
+        int labelY;
+
+        //replaces the global takt stopwatch
         System.Diagnostics.Stopwatch stopwatch;
+
+        //local takt stopwatch
+        System.Diagnostics.Stopwatch playStopWatch;
 
         System.Diagnostics.Stopwatch buttonHighlight;
         private int highlightTime = 150;
@@ -95,15 +110,8 @@ namespace Test
             widgetWidth = width;
             widgetHeight = height;
 
-            //thickPen.Alignment = PenAlignment.Center;
+            nrOfTakts = 0;
 
-            /*
-            Microphone mic = Microphone.Default;
-            if (mic == null)
-            {
-                return false; // No microphone is attached to the device
-            }
-            */
             Mic = ButtonStates.RecordEmpty;
             Volume = ButtonStates.Sound;
             Play = ButtonStates.Playing;
@@ -156,11 +164,20 @@ namespace Test
             counter = new Rectangle((int)(0.1 * height), (int)(0.05 * height), (int)(0.3 * widgetWidth), (int)(0.3 * widgetHeight));
             counterCurve = new Rectangle(timer.X - 5, timer.Y - 5, timer.Width, timer.Height);
 
+            //counter label
+            labelTakts = nrOfTakts.ToString();
+            labelFont = new System.Drawing.Font("Arial", 12);
+            labelBrush = new System.Drawing.SolidBrush(System.Drawing.Color.Black);
+            labelFormat = new System.Drawing.StringFormat();
+            labelX = (int)(0.13 * height);
+            labelY = (int)(0.07 * height);
+
             //time properties
             time = new System.Windows.Forms.Timer();
             refresh = new System.Windows.Forms.Timer();
             stopwatch = new System.Diagnostics.Stopwatch();
             buttonHighlight = new System.Diagnostics.Stopwatch();
+            playStopTime = new System.Windows.Forms.Timer();
 
             //register EventHandler for timer
             time.Tick += new EventHandler(time_tick);
@@ -168,6 +185,8 @@ namespace Test
 
             refresh.Tick += new EventHandler(refresh_tick);
             refresh.Interval = refreshRate;
+
+            playStopTime.Tick += new EventHandler(playStopTime_tick);
 
             //has to be moved
             time.Start();
@@ -232,6 +251,9 @@ namespace Test
             g.FillRectangle(buttonBrush, counter);
             g.FillEllipse(backgroundBrush, counterCurve);
 
+            labelTakts = nrOfTakts.ToString();
+            g.DrawString(labelTakts, labelFont, labelBrush, labelX, labelY, labelFormat);
+
             //timer
             if ((Mic == ButtonStates.RecordEmpty ||
                 Mic == ButtonStates.WaitingToRecord) &&
@@ -276,14 +298,16 @@ namespace Test
                 g.DrawEllipse(linePen, timer);
             }
             else if (Mic == ButtonStates.StoppedRecording &&
-                     Play == ButtonStates.Playing)
+                     (Play == ButtonStates.Playing ||
+                      Play == ButtonStates.Stopping))
             {
-                g.DrawLine(thickPen, timerMid, getPointOnCircle(getTaktRatio()));
-            }
-            else if (Mic == ButtonStates.StoppedRecording &&
-                     Play == ButtonStates.Stopping)
-            {
+                for (double i = 1; i < nrOfTakts; i++)
+                {
+                    double ratio = i / nrOfTakts;
+                    g.DrawLine(linePen, timerMid, getPointOnCircle(ratio));
+                }
 
+                g.DrawLine(thickPen, timerMid, getPointOnCircle(getCustomTaktRatio()));
             }
             if (Mic == ButtonStates.Recording ||
                 Mic == ButtonStates.WaitingToRecord ||
@@ -478,6 +502,12 @@ namespace Test
             stopwatch.Restart();
         }
 
+        private void playStopTime_tick(object source, EventArgs e)
+        {
+            onCustomBar();
+            playStopWatch.Restart();
+        }
+
         private void refresh_tick(object source, EventArgs e)
         {
             if (buttonHighlight.ElapsedMilliseconds > highlightTime)
@@ -497,21 +527,71 @@ namespace Test
             {
                 Mic = ButtonStates.Recording;
                 waitingToRecord = false;
+                nrOfTakts = 0;
+
+                if (recordInside)
+                {
+                    //TODO: remove audio
+                }
+
+                //TODO: start recording
+            }
+            else if (Mic == ButtonStates.Recording)
+            {
+                nrOfTakts += 1;
             }
             else if (Mic == ButtonStates.WaitingToEndRecord &&
                 waitingToEndRecord)
             {
                 Mic = ButtonStates.StoppedRecording;
                 recordInside = true;
+                nrOfTakts += 1;
+
+                //TODO: stop recording
+
+                loopInMS = nrOfTakts * taktInMS;
+
+                playStopTime = new System.Windows.Forms.Timer();
+                playStopWatch = new System.Diagnostics.Stopwatch();
+
+                playStopTime.Interval = loopInMS;
+
+                Volume = ButtonStates.Sound;
+                Play = ButtonStates.Playing;
+
+                //TODO: start playing audio
+
+                playStopTime.Start();
+                playStopWatch.Start();
+            }
+
+            if (nrOfTakts >= 10)
+            {
+                labelX = (int)(0.1 * widgetHeight);
+            }
+            else
+            {
+                labelX = (int)(0.13 * widgetHeight);
             }
         }
 
+        private void onCustomBar()
+        {
+            //TODO: play the audio again
+        }
 
         //returns the elapsed time value since the last takt (between 0 and 1)
         private double getTaktRatio()
         {
             double elapsed = stopwatch.ElapsedMilliseconds;
             double taktRatio = elapsed / taktInMS;
+            return taktRatio;
+        }
+
+        private double getCustomTaktRatio()
+        {
+            double elapsed = playStopWatch.ElapsedMilliseconds;
+            double taktRatio = elapsed / loopInMS;
             return taktRatio;
         }
 
@@ -564,10 +644,12 @@ namespace Test
                     if (Volume == ButtonStates.Sound)
                     {
                         Volume = ButtonStates.Mute;
+                        //TODO: mute sound
                     }
                     else if (Volume == ButtonStates.Mute)
                     {
                         Volume = ButtonStates.Sound;
+                        //TODO: unmute sound
                     }
                 }
             }
@@ -578,20 +660,24 @@ namespace Test
                     if (Play == ButtonStates.Playing)
                     {
                         Play = ButtonStates.Stopping;
+
+                        playStopTime.Stop();
+                        playStopWatch.Stop();
+
+                        //TODO: stop audio
                     }
                     else if (Play == ButtonStates.Stopping)
                     {
                         Play = ButtonStates.Playing;
+
+                        playStopTime.Start();
+                        playStopWatch.Start();
+
+                        //TODO: resume audio
                     }
                 }
             }
-
-            buttonStateHandler();
         }
 
-        private void buttonStateHandler()
-        {
-
-        }
     }
 }
