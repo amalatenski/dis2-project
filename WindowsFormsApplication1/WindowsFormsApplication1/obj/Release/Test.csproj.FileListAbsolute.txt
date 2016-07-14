@@ -1,0 +1,10 @@
+E:\Dropbox\DIS2 projekt\WindowsFormsApplication1\WindowsFormsApplication1\bin\Release\Test.exe.config
+E:\Dropbox\DIS2 projekt\WindowsFormsApplication1\WindowsFormsApplication1\bin\Release\Test.exe
+E:\Dropbox\DIS2 projekt\WindowsFormsApplication1\WindowsFormsApplication1\bin\Release\Test.pdb
+E:\Dropbox\DIS2 projekt\WindowsFormsApplication1\WindowsFormsApplication1\bin\Release\CSCore.dll
+E:\Dropbox\DIS2 projekt\WindowsFormsApplication1\WindowsFormsApplication1\bin\Release\CSCore.xml
+E:\Dropbox\DIS2 projekt\WindowsFormsApplication1\WindowsFormsApplication1\obj\Release\WindowsFormsApplication1.Form1.resources
+E:\Dropbox\DIS2 projekt\WindowsFormsApplication1\WindowsFormsApplication1\obj\Release\Test.Properties.Resources.resources
+E:\Dropbox\DIS2 projekt\WindowsFormsApplication1\WindowsFormsApplication1\obj\Release\Test.csproj.GenerateResource.Cache
+E:\Dropbox\DIS2 projekt\WindowsFormsApplication1\WindowsFormsApplication1\obj\Release\Test.exe
+E:\Dropbox\DIS2 projekt\WindowsFormsApplication1\WindowsFormsApplication1\obj\Release\Test.pdb
