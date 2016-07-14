@@ -68,15 +68,15 @@ namespace Test
 
         private static int timerInnerCircleSize = 25;
 
-        Bitmap recordEmptyIcon = new Bitmap("C:/Users/amala_000/Documents/icons/recordEmpty.png");
-        Bitmap recordingIcon = new Bitmap("C:/Users/amala_000/Documents/icons/recording.png");
-        Bitmap stopRecordingIcon = new Bitmap("C:/Users/amala_000/Documents/icons/recordStop.png");
+        Bitmap recordEmptyIcon = Properties.Resources.recordEmpty;
+        Bitmap recordingIcon = Properties.Resources.recording;
+        Bitmap stopRecordingIcon = Properties.Resources.recordStop;
 
-        Bitmap soundIcon = new Bitmap("C:/Users/amala_000/Documents/icons/sound.png");
-        Bitmap muteIcon = new Bitmap("C:/Users/amala_000/Documents/icons/mute.png");
+        Bitmap soundIcon = Properties.Resources.sound;
+        Bitmap muteIcon = Properties.Resources.mute;
 
-        Bitmap pauseIcon = new Bitmap("C:/Users/amala_000/Documents/icons/pause.png");
-        Bitmap playIcon = new Bitmap("C:/Users/amala_000/Documents/icons/play.png");
+        Bitmap pauseIcon = Properties.Resources.pause;
+        Bitmap playIcon = Properties.Resources.play;
 
         Bitmap waitingPie;
 

@@ -5,8 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.Windows.Forms;
-using System.Windows.Input;
-using System.Windows;
 
 
 
@@ -81,7 +79,8 @@ namespace Test
 
             // load image. make sure to load in image properties
             try{
-                notesImage = Image.FromFile("test.bmp");
+                //notesImage = Image.FromFile("test.bmp");
+                notesImage = Properties.Resources.test;
                 imageWidth = notesImage.Width;
                 notesTargetRect = new Rectangle(0, 0, width, notesImage.Height);
 
