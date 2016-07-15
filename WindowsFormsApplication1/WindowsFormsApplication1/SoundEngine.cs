@@ -26,9 +26,6 @@ namespace Test
         private List<DmoAggregator> effectChain;
         
         private List<Loop> loops;
-        DmoEchoEffect echoEffect;
-        DmoAggregator effect;
-        DmoDistortionEffect distortionEffect;
         
         public SoundEngine()
         {
