@@ -61,10 +61,19 @@ namespace Test
         protected override void OnMouseDown(System.Windows.Forms.MouseEventArgs e)
         {
             base.OnMouseDown(e);
-            if (slider.Contains(new System.Drawing.Point(e.X, e.Y)))
-            {
-                dragMode = true;
-            }
+
+            slider.X = e.X - sliderWidth / 2;
+            if (slider.X < 0) { slider.X = 0; }
+            if (slider.X > this.Width - sliderWidth) { slider.X = this.Width - sliderWidth; }
+
+            slider.Y = e.Y - sliderHeight / 2;
+            if (slider.Y < 0) { slider.Y = 0; }
+            if (slider.Y > this.Height - sliderHeight) { slider.Y = this.Height - sliderHeight; }
+
+            updateStatus();
+            //Repaints the widget. Othewise the new position would not be drawn.
+            this.Refresh();
+            dragMode = true;
         }
 
         protected override void OnMouseUp(System.Windows.Forms.MouseEventArgs e)

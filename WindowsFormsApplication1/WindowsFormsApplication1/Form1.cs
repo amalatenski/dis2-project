@@ -40,7 +40,7 @@ namespace WindowsFormsApplication1
             MuGet muGet = new MuGetSlider("bla", 25, 25, 150, 150);
             this.Controls.Add(muGet);
 
-            MuGet muGet2 = new MuGet2DSlider("pete", 200, 25, 150, 150, 0, 1, 0, 1);
+            MuGet muGet2 = new MuGet2DSlider("pete", 300, 25, 150, 150, 0, 1, 0, 1);
             this.Controls.Add(muGet2);
             muGet2.OnUpdateStatus += muGet_OnUpdateStatus;
 

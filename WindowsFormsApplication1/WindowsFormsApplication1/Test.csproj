@@ -64,6 +64,7 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EffectClass.cs" />
     <Compile Include="Loop.cs" />
     <Compile Include="NoteScroller.cs">
       <SubType>Component</SubType>
