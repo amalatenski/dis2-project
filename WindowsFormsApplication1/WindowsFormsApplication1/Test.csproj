@@ -36,8 +36,9 @@
     <Reference Include="Bass.Net">
       <HintPath>..\..\BASS\Bass.Net\v4.5\Bass.Net.dll</HintPath>
     </Reference>
-    <Reference Include="CSCore">
+    <Reference Include="CSCore, Version=1.1.5992.18249, Culture=neutral, PublicKeyToken=5a08f2b6f4415dea, processorArchitecture=MSIL">
       <HintPath>..\packages\CSCore.1.1.0\lib\net35-client\CSCore.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
