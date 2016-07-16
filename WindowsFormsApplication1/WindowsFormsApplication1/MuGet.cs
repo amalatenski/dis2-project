@@ -15,12 +15,31 @@ namespace Test
         public delegate void StatusUpdateHandler(object sender, StatusEventArgs e);
         public event StatusUpdateHandler OnUpdateStatus;
         //default colors and stuff
-        private static Pen borderPen = System.Drawing.Pens.Black;
-        private static Color backgroundColor = Color.LightGray;
-        private static Color hoverColor = Color.DarkGray;
-        private static Pen hoverPen = System.Drawing.Pens.White;
-
         private Pen currentPen;
+
+        private static Pen borderPen = System.Drawing.Pens.Black;
+        private static Pen hoverPen = System.Drawing.Pens.White;
+        private static Color hoverColor = Color.DarkGray;
+
+        private static Color backgroundColor = Color.FromArgb(255, 23, 56, 78);
+        private static Color backgroundObjectColor = Color.FromArgb(255, 23, 56, 78);
+
+        private static Color brownWeakColor = Color.FromArgb(255, 23, 56, 78);
+        private static Color brownStrongColor = Color.FromArgb(255, 23, 56, 78);
+
+        private static Color greenWeakColor = Color.FromArgb(255, 23, 56, 78);
+        private static Color greenMediumColor = Color.FromArgb(255, 23, 56, 78);
+        private static Color greenStrongColor = Color.FromArgb(255, 23, 56, 78);
+
+        private static SolidBrush backgroundBrush = new SolidBrush(backgroundColor);
+        private static Brush backgroundObjectBrush = new SolidBrush(backgroundObjectColor);
+
+        private static Brush brownWeakBrush = new SolidBrush(brownWeakColor);
+        private static Brush brownStrongBrush = new SolidBrush(brownStrongColor);
+
+        private static Brush greenWeakBrush = new SolidBrush(greenWeakColor);
+        private static Brush greenMediumBrush = new SolidBrush(greenMediumColor);
+        private static Brush greenStrongBrush = new SolidBrush(greenStrongColor);
 
         //# beats per minute.. standard 120
         public static double Bpm { get; set; }
