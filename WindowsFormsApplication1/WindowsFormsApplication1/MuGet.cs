@@ -21,25 +21,30 @@ namespace Test
         private static Pen hoverPen = System.Drawing.Pens.White;
         private static Color hoverColor = Color.DarkGray;
 
-        private static Color backgroundColor = Color.FromArgb(255, 23, 56, 78);
-        private static Color backgroundObjectColor = Color.FromArgb(255, 23, 56, 78);
+        private static Color backgroundColor = Color.FromArgb(255, 243, 244, 236);
+        private static Color backgroundObjectColor = Color.FromArgb(255, 204, 207, 188);
+        //evtl. 178, 182, 154 für noch dunkler
 
-        private static Color brownWeakColor = Color.FromArgb(255, 23, 56, 78);
-        private static Color brownStrongColor = Color.FromArgb(255, 23, 56, 78);
+        private static Color brownWeakColor = Color.FromArgb(255, 208, 169, 118);
+        private static Color brownStrongColor = Color.FromArgb(255, 180, 137, 80);
+        //evtl. 163, 123, 69 für noch dunkler
 
-        private static Color greenWeakColor = Color.FromArgb(255, 23, 56, 78);
-        private static Color greenMediumColor = Color.FromArgb(255, 23, 56, 78);
-        private static Color greenStrongColor = Color.FromArgb(255, 23, 56, 78);
+        private static Color greenWeakColor = Color.FromArgb(255, 179, 198, 56);
+        private static Color greenMediumColor = Color.FromArgb(255, 155, 171, 49);
+        private static Color greenStrongColor = Color.FromArgb(255, 134, 148, 42);
+        // 107, 159, 89
+        // 92, 137, 77
+        // 80, 118, 66
 
-        private static SolidBrush backgroundBrush = new SolidBrush(backgroundColor);
-        private static Brush backgroundObjectBrush = new SolidBrush(backgroundObjectColor);
+        public static SolidBrush backgroundBrush = new SolidBrush(backgroundColor);
+        public static SolidBrush backgroundObjectBrush = new SolidBrush(backgroundObjectColor);
 
-        private static Brush brownWeakBrush = new SolidBrush(brownWeakColor);
-        private static Brush brownStrongBrush = new SolidBrush(brownStrongColor);
+        public static SolidBrush brownWeakBrush = new SolidBrush(brownWeakColor);
+        public static SolidBrush brownStrongBrush = new SolidBrush(brownStrongColor);
 
-        private static Brush greenWeakBrush = new SolidBrush(greenWeakColor);
-        private static Brush greenMediumBrush = new SolidBrush(greenMediumColor);
-        private static Brush greenStrongBrush = new SolidBrush(greenStrongColor);
+        public static SolidBrush greenWeakBrush = new SolidBrush(greenWeakColor);
+        public static SolidBrush greenMediumBrush = new SolidBrush(greenMediumColor);
+        public static SolidBrush greenStrongBrush = new SolidBrush(greenStrongColor);
 
         //# beats per minute.. standard 120
         public static double Bpm { get; set; }

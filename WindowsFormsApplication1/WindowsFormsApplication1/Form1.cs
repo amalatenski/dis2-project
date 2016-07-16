@@ -33,12 +33,12 @@ namespace WindowsFormsApplication1
             InitializeComponent();
             //InitAudioGraph();
 
-            MuGet loop = new MuGetLoop("loop", 25, 25, 250, 200);
+            MuGet loop = new MuGetLoop("loop", 25, 25, 250, 150);
             this.Controls.Add(loop);
 
             //this.Controls.Add(new NoteScroller("bla", 25, 200, 300, 100));
-            MuGet muGet = new MuGetSlider("bla", 25, 25, 150, 150);
-            this.Controls.Add(muGet);
+            //MuGet muGet = new MuGet2DSlider("bla", 25, 25, 150, 150);
+            //this.Controls.Add(muGet);
 
             MuGet muGet2 = new MuGet2DSlider("pete", 300, 25, 150, 150, 0, 1, 0, 1);
             this.Controls.Add(muGet2);
@@ -124,6 +124,7 @@ namespace WindowsFormsApplication1
         public bool CanSeek
         {
             get { return _source.CanSeek; }
+            //get { return true; }
         }
 
         public WaveFormat WaveFormat
