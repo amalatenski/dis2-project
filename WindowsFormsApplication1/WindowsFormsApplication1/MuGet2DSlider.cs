@@ -101,7 +101,7 @@ namespace Test
             }
         }
 
-        private void updateStatus()
+        public void updateStatus()
         {
             float valueX = ((float)(getMidpoint(slider).X - sliderWidth / 2) / (float)(Width - sliderWidth)) * (endX - startX) + startX;
             float valueY = ((float)(getMidpoint(slider).Y - sliderHeight / 2) / (float)(Height - sliderHeight)) * (startY - endY) + endY;
