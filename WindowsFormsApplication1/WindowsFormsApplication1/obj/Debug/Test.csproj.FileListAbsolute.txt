@@ -60,3 +60,15 @@ C:\Users\Nik\Source\Repos\dis2-project\WindowsFormsApplication1\WindowsFormsAppl
 C:\Users\Nik\Source\Repos\dis2-project\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\System.Runtime.WindowsRuntime.dll
 C:\Users\Nik\Source\Repos\dis2-project\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\CSCore.xml
 C:\Users\Nik\Source\Repos\dis2-project\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\Test.exe
+C:\Users\Niklas\Source\Repos\dis2-project\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\Test.exe.config
+C:\Users\Niklas\Source\Repos\dis2-project\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\Test.pdb
+C:\Users\Niklas\Source\Repos\dis2-project\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\Test.exe
+C:\Users\Niklas\Source\Repos\dis2-project\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\Test.pdb
+C:\Users\Niklas\Source\Repos\dis2-project\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\CSCore.dll
+C:\Users\Niklas\Source\Repos\dis2-project\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\System.Runtime.WindowsRuntime.dll
+C:\Users\Niklas\Source\Repos\dis2-project\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\CSCore.xml
+C:\Users\Niklas\Source\Repos\dis2-project\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\Test.csprojResolveAssemblyReference.cache
+C:\Users\Niklas\Source\Repos\dis2-project\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Form1.resources
+C:\Users\Niklas\Source\Repos\dis2-project\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\Test.Properties.Resources.resources
+C:\Users\Niklas\Source\Repos\dis2-project\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\Test.csproj.GenerateResource.Cache
+C:\Users\Niklas\Source\Repos\dis2-project\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\Test.exe

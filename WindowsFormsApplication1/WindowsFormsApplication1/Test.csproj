@@ -33,9 +33,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Bass.Net">
-      <HintPath>..\..\BASS\Bass.Net\v4.5\Bass.Net.dll</HintPath>
-    </Reference>
     <Reference Include="CSCore, Version=1.1.5992.18249, Culture=neutral, PublicKeyToken=5a08f2b6f4415dea, processorArchitecture=MSIL">
       <HintPath>..\packages\CSCore.1.1.0\lib\net35-client\CSCore.dll</HintPath>
       <Private>True</Private>
@@ -66,6 +63,9 @@
   <ItemGroup>
     <Compile Include="EffectClass.cs" />
     <Compile Include="Loop.cs" />
+    <Compile Include="MuGetEffects.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="NoteScroller.cs">
       <SubType>Component</SubType>
     </Compile>
