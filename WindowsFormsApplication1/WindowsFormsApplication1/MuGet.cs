@@ -46,6 +46,7 @@ namespace Test
         public MuGet(String text, Int32 x, Int32 y, Int32 width, Int32 height)
             : base(text, x, y, width, height)
         {
+            this.DoubleBuffered = true;
             currentPen = borderPen;
             this.BackColor = backgroundColor;
         }
