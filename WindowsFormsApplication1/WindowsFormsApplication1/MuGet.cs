@@ -20,7 +20,7 @@ namespace Test
         private static Pen borderPen = System.Drawing.Pens.Black;
         private static Pen hoverPen = System.Drawing.Pens.White;
         private static Color hoverColor = Color.DarkGray;
-
+        /*
         private static Color backgroundColor = Color.FromArgb(255, 243, 244, 236);
         private static Color backgroundObjectColor = Color.FromArgb(255, 204, 207, 188);
         //evtl. 178, 182, 154 für noch dunkler
@@ -35,16 +35,29 @@ namespace Test
         // 107, 159, 89
         // 92, 137, 77
         // 80, 118, 66
+        */
+
+        private static Color backgroundColor = Color.LightYellow;
+        private static Color backgroundObjectColor = Color.SteelBlue;
+        //evtl. 178, 182, 154 für noch dunkler
+
+        private static Color inactiveColor = Color.DarkGray;
+        private static Color activeColor = Color.SandyBrown;
+        //evtl. 163, 123, 69 für noch dunkler
+
+        private static Color stateDefaultColor = Color.Beige;
+        private static Color stateProgressColor = Color.Yellow;
+        private static Color stateFinishColor = Color.Aquamarine;
 
         public static SolidBrush backgroundBrush = new SolidBrush(backgroundColor);
         public static SolidBrush backgroundObjectBrush = new SolidBrush(backgroundObjectColor);
 
-        public static SolidBrush brownWeakBrush = new SolidBrush(brownWeakColor);
-        public static SolidBrush brownStrongBrush = new SolidBrush(brownStrongColor);
+        public static SolidBrush inactiveBrush = new SolidBrush(inactiveColor);
+        public static SolidBrush activeBrush = new SolidBrush(activeColor);
 
-        public static SolidBrush greenWeakBrush = new SolidBrush(greenWeakColor);
-        public static SolidBrush greenMediumBrush = new SolidBrush(greenMediumColor);
-        public static SolidBrush greenStrongBrush = new SolidBrush(greenStrongColor);
+        public static SolidBrush stateDefaultBrush = new SolidBrush(stateDefaultColor);
+        public static SolidBrush stateProgressBrush = new SolidBrush(stateProgressColor);
+        public static SolidBrush stateFinishBrush = new SolidBrush(stateFinishColor);
 
         //# beats per minute.. standard 120
         public static double Bpm { get; set; }

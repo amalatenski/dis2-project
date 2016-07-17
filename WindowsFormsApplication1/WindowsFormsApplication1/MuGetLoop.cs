@@ -15,16 +15,17 @@ namespace Test
      */
     class MuGetLoop : MuGet
     {
+        private static int loopId;
+
         //default colors and stuff
         //Pens are used for not filled objects.
         private static Pen linePen = System.Drawing.Pens.Black;
         private static Pen thickPen = new Pen(Color.FromArgb(255, 0, 0, 0), 3);
         //Brushes are used to fill objects.
-        private static Brush inactiveBrush = backgroundObjectBrush;
-        private static Brush buttonBrush = brownStrongBrush;
-        private static Brush timerBrush = greenWeakBrush;
-        private static Brush timerRecordBrush = greenMediumBrush;
-        private static Brush timerPlayBrush = greenStrongBrush;
+        private static Brush buttonBrush = activeBrush;
+        private static Brush timerBrush = stateDefaultBrush;
+        private static Brush timerRecordBrush = stateProgressBrush;
+        private static Brush timerPlayBrush = stateFinishBrush;
 
         private System.Windows.Forms.Timer time;
         private int taktInMS = 3000;

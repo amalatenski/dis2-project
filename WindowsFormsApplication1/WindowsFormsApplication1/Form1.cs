@@ -123,8 +123,8 @@ namespace WindowsFormsApplication1
 
         public bool CanSeek
         {
-            get { return _source.CanSeek; }
-            //get { return true; }
+            //get { return _source.CanSeek; }
+            get { return true; }
         }
 
         public WaveFormat WaveFormat
