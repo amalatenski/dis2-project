@@ -31,3 +31,5 @@
 # Debug files
 *.dSYM/
 *.su
+/WindowsFormsApplication1/WindowsFormsApplication1/obj/Debug
+/WindowsFormsApplication1/WindowsFormsApplication1/obj/Release

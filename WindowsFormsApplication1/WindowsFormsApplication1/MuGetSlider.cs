@@ -27,10 +27,15 @@ namespace Test
         private Rectangle slider;
         private bool dragMode = false;
 
+        float start;
+        float end;
+
         //Constructor calls base class constructor of Control
-        public MuGetSlider(String text, Int32 x, Int32 y, Int32 width, Int32 height)
+        public MuGetSlider(String text, Int32 x, Int32 y, Int32 width, Int32 height, float start, float end)
             : base(text, x, y, width, height)
         {
+            this.start = start;
+            this.end = end;
             //creates the movable rectangle for the slider
             slider = new System.Drawing.Rectangle(10, (int)(this.Height/2-sliderHeight/2), sliderWidth, sliderHeight);
         }
@@ -50,10 +55,24 @@ namespace Test
         protected override void OnMouseDown(System.Windows.Forms.MouseEventArgs e)
         {
             base.OnMouseDown(e);
-            if (slider.Contains(new System.Drawing.Point(e.X, e.Y)))
-            {
-                dragMode = true;
-            }
+            slider.X = e.X - sliderWidth / 2;
+
+            if (slider.X < sliderLineOffset) { slider.X = sliderLineOffset; }
+            if (slider.X > this.Width - sliderLineOffset - sliderWidth) { slider.X = this.Width - sliderLineOffset - sliderWidth; }
+
+            //Raises an event that gives the slider position between 0 and 1 as a string.
+            updateStatus();
+        
+            //Repaints the widget. Othewise the new position would not be drawn.
+            this.Refresh();
+            dragMode = true;
+        }
+
+        public void updateStatus()
+        {
+            float value = ((float)(getMidpoint(slider).X - sliderWidth / 2 - sliderLineOffset) / (float)(Width - sliderWidth - sliderLineOffset*2)) * (end - start) + start;
+
+            UpdateStatus(value.ToString());
         }
 
         protected override void OnMouseUp(System.Windows.Forms.MouseEventArgs e)
@@ -73,10 +92,28 @@ namespace Test
                 if (slider.X > this.Width - sliderLineOffset - sliderWidth) { slider.X = this.Width - sliderLineOffset - sliderWidth; }
 
                 //Raises an event that gives the slider position between 0 and 1 as a string.
-                UpdateStatus(((double)(slider.X - sliderLineOffset) / (double)(this.Width - 2 * sliderLineOffset)).ToString());
+                updateStatus();
             }
             //Repaints the widget. Othewise the new position would not be drawn.
             this.Refresh();
+        }
+
+        private System.Drawing.Point getMidpoint(Rectangle rect)
+        {
+            System.Drawing.Point mid = new System.Drawing.Point();
+            mid.X = (int)(rect.X + rect.Width / 2);
+            mid.Y = (int)(rect.Y + rect.Height / 2);
+            return mid;
+
+        }
+
+        private Rectangle getRectangleAroundPoint(int x, int y, int sizeX, int sizeY)
+        {
+            int rectX = (int)(x - sizeX / 2);
+            int rectY = (int)(y - sizeY / 2);
+
+            Rectangle rect = new Rectangle(rectX, rectY, sizeX, sizeY);
+            return rect;
         }
     }
 }

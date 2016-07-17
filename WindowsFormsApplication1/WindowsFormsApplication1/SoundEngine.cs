@@ -14,55 +14,40 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Un4seen.Bass;
-using Un4seen.Bass.AddOn.Fx;
 
 namespace Test
 {
     class SoundEngine
-    {
-        private const float defaultEchoLeftDelay = 500;
-        private const float defaultEchoRightDelay = 500;
-        private const bool defaultEchoPanDelay = false;
-        private const float defaultEchoWetDryMix = 50;
-        private const float defaultEchoFeedback = 50;
-
-
+    { 
         private WasapiCapture capture;
         private SoundInSource captureSource;
         private ISoundOut soundOut;
-        private List<DmoAggregator> effects;
+        public List<EffectClass> effects { get; private set; }
+        private List<DmoAggregator> effectChain;
+        
         private List<Loop> loops;
-        DmoEchoEffect echoEffect;
-        DmoAggregator effect;
-        DmoDistortionEffect distortionEffect;
         
         public SoundEngine()
         {
             loops = new List<Loop>();
-            effects = new List<DmoAggregator>();
+            effects = new List<EffectClass>();
 
             capture = new WasapiCapture();
             capture.Initialize();
             captureSource = new SoundInSource(capture) { FillWithZeros = true };
-            Console.WriteLine(effects.FindIndex(x => x.GetType() == typeof(DmoEchoEffect)));
 
             //IWaveSource waveSource = GetSoundSource(@"E:\Musik\Music\Unknown Artist\Unknown Album\Here's to the people.wav");
 
-            echoEffect = new DmoEchoEffect(captureSource);
-            effects.Add(echoEffect);
-            echoEffect.LeftDelay = 500; //500 ms
-            echoEffect.RightDelay = 250; //250 ms
-            //echoEffect.IsEnabled = true;
-            distortionEffect = new DmoDistortionEffect(captureSource);
-            effects.Add(distortionEffect);
-            
-            effect = new DmoChorusEffect(captureSource);
-            //effects.Add(effect);
             soundOut = GetSoundOut();
-            //loop = new LoopStream(buffer);
-            //loop.EnableLoop = true;
+            EchoEffect echo = new EchoEffect();
+            effects.Add(echo);
+            echo.leftDelay = 500;
+            echo.rightDelay = 250;
+
+            effects.Add(new DistortionEffect());
+            effects.Add(new ChorusEffect());
             soundOut.Initialize(compileEffectChain());
+            
             startPlayback();
         }
 
@@ -84,71 +69,68 @@ namespace Test
         private IWaveSource compileEffectChain()
         {
             IWaveSource currentInput = captureSource;
-            List<DmoAggregator> newEffects = new List<DmoAggregator>();
+            effectChain = new List<DmoAggregator>();
 
-
-            foreach(DmoAggregator effect in effects)
+            foreach(EffectClass effect in effects)
             {
-                if(effect.GetType() == typeof(DmoEchoEffect))
+                if(effect.GetType() == typeof(EchoEffect))
                 {
-                    DmoEchoEffect echo = effect as DmoEchoEffect;
+                    EchoEffect echo = effect as EchoEffect;
                     DmoEchoEffect newEcho = new DmoEchoEffect(currentInput);
-                    newEcho.LeftDelay = echo.LeftDelay;
-                    newEcho.RightDelay = echo.RightDelay;
-                    newEcho.WetDryMix = echo.WetDryMix;
-                    newEcho.PanDelay = echo.PanDelay;
-                    newEcho.Feedback = echo.Feedback;
-                    newEffects.Add(newEcho);
+                    newEcho.LeftDelay = echo.leftDelay;
+                    newEcho.RightDelay = echo.rightDelay;
+                    newEcho.WetDryMix = echo.wetDryMix;
+                    newEcho.PanDelay = echo.panDelay;
+                    newEcho.Feedback = echo.feedback;
+                    effectChain.Add(newEcho);
                     currentInput = newEcho;
-                } else if(effect.GetType() == typeof(DmoDistortionEffect))
+                } else if(effect.GetType() == typeof(DistortionEffect))
                 {
-                    DmoDistortionEffect distortion = effect as DmoDistortionEffect;
+                    DistortionEffect distortion = effect as DistortionEffect;
                     DmoDistortionEffect newDistortion = new DmoDistortionEffect(currentInput);
-                    newDistortion.Edge = distortion.Edge;
-                    newDistortion.Gain = distortion.Gain;
-                    newEffects.Add(newDistortion);
+                    newDistortion.Edge = distortion.edge;
+                    newDistortion.Gain = distortion.gain;
+                    effectChain.Add(newDistortion);
                     currentInput = newDistortion;
-                } else if(effect.GetType() == typeof(DmoChorusEffect))
+                } else if(effect.GetType() == typeof(ChorusEffect))
                 {
-                    DmoChorusEffect chorus = effect as DmoChorusEffect;
+                    ChorusEffect chorus = effect as ChorusEffect;
                     DmoChorusEffect newChorus = new DmoChorusEffect(currentInput);
-                    newChorus.Delay = chorus.Delay;
-                    newChorus.Depth = chorus.Depth;
-                    newChorus.Feedback = chorus.Feedback;
-                    newChorus.Frequency = chorus.Frequency;
-                    newEffects.Add(newChorus);
+                    newChorus.Delay = chorus.delay;
+                    newChorus.Depth = chorus.depth;
+                    newChorus.Feedback = chorus.feedback;
+                    newChorus.Frequency = chorus.frequency;
+                    effectChain.Add(newChorus);
                     currentInput = newChorus;
                 }
             }
-
-            effects = newEffects;
+            
             return currentInput;
         }
 
-        public void newEchoEffect(float feedback = defaultEchoFeedback, float leftDelay = defaultEchoLeftDelay, float rightDelay = defaultEchoRightDelay, float wetDryMix = defaultEchoWetDryMix, bool panDelay = defaultEchoPanDelay)
+        public void newEffect (EffectClass effect)
         {
-            DmoEchoEffect echo = new DmoEchoEffect(captureSource);
-            echo.Feedback = feedback;
-            echo.LeftDelay = leftDelay;
-            echo.RightDelay = rightDelay;
-            echo.WetDryMix = wetDryMix;
-            echo.PanDelay = panDelay;
+            effects.Add(effect);
+            newSoundOut(compileEffectChain());
+        }
 
-            int index = effects.FindIndex(x => x.GetType() == typeof(DmoEchoEffect));
-            if (index != -1)
-            {
-                effects[index] = new DmoEchoEffect(captureSource);
-            }
-            else
-            {
-                effects.Add(echo);
-            }
+        public void removeEffect (EffectClass effect)
+        {
+            effects.Remove(effect);
+            newSoundOut(compileEffectChain());
+            newSoundOut(compileEffectChain());
+        }
+
+        public void moveEffectTo (EffectClass effect, int newIndex)
+        {
+            effects.Remove(effect);
+            effects.Insert(newIndex, effect);
             newSoundOut(compileEffectChain());
         }
 
         public void tmp(string value)
         {
-            DmoEchoEffect echo = effects.Find(x => x.GetType() == typeof(DmoEchoEffect)) as DmoEchoEffect;
+            DmoEchoEffect echo = effectChain[effects.FindIndex(x => x.GetType() == typeof(EchoEffect))] as DmoEchoEffect;
             if (echo != null)
             {
                 echo.LeftDelay = float.Parse(value.Split(new char[] { ' ' })[0]) * 1000 + 1;

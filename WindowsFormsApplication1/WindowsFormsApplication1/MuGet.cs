@@ -15,12 +15,49 @@ namespace Test
         public delegate void StatusUpdateHandler(object sender, StatusEventArgs e);
         public event StatusUpdateHandler OnUpdateStatus;
         //default colors and stuff
-        private static Pen borderPen = System.Drawing.Pens.Black;
-        private static Color backgroundColor = Color.LightGray;
-        private static Color hoverColor = Color.DarkGray;
-        private static Pen hoverPen = System.Drawing.Pens.White;
-
         private Pen currentPen;
+
+        private static Pen borderPen = System.Drawing.Pens.Black;
+        private static Pen hoverPen = System.Drawing.Pens.White;
+        private static Color hoverColor = Color.DarkGray;
+        /*
+        private static Color backgroundColor = Color.FromArgb(255, 243, 244, 236);
+        private static Color backgroundObjectColor = Color.FromArgb(255, 204, 207, 188);
+        //evtl. 178, 182, 154 für noch dunkler
+
+        private static Color brownWeakColor = Color.FromArgb(255, 208, 169, 118);
+        private static Color brownStrongColor = Color.FromArgb(255, 180, 137, 80);
+        //evtl. 163, 123, 69 für noch dunkler
+
+        private static Color greenWeakColor = Color.FromArgb(255, 179, 198, 56);
+        private static Color greenMediumColor = Color.FromArgb(255, 155, 171, 49);
+        private static Color greenStrongColor = Color.FromArgb(255, 134, 148, 42);
+        // 107, 159, 89
+        // 92, 137, 77
+        // 80, 118, 66
+        */
+
+        private static Color backgroundColor = Color.LightYellow;
+        private static Color backgroundObjectColor = Color.SteelBlue;
+        //evtl. 178, 182, 154 für noch dunkler
+
+        private static Color inactiveColor = Color.DarkGray;
+        private static Color activeColor = Color.SandyBrown;
+        //evtl. 163, 123, 69 für noch dunkler
+
+        private static Color stateDefaultColor = Color.Beige;
+        private static Color stateProgressColor = Color.Yellow;
+        private static Color stateFinishColor = Color.Aquamarine;
+
+        public static SolidBrush backgroundBrush = new SolidBrush(backgroundColor);
+        public static SolidBrush backgroundObjectBrush = new SolidBrush(backgroundObjectColor);
+
+        public static SolidBrush inactiveBrush = new SolidBrush(inactiveColor);
+        public static SolidBrush activeBrush = new SolidBrush(activeColor);
+
+        public static SolidBrush stateDefaultBrush = new SolidBrush(stateDefaultColor);
+        public static SolidBrush stateProgressBrush = new SolidBrush(stateProgressColor);
+        public static SolidBrush stateFinishBrush = new SolidBrush(stateFinishColor);
 
         //# beats per minute.. standard 120
         public static double Bpm { get; set; }
@@ -46,6 +83,7 @@ namespace Test
         public MuGet(String text, Int32 x, Int32 y, Int32 width, Int32 height)
             : base(text, x, y, width, height)
         {
+            this.DoubleBuffered = true;
             currentPen = borderPen;
             this.BackColor = backgroundColor;
         }

@@ -15,17 +15,17 @@ namespace Test
      */
     class MuGetLoop : MuGet
     {
+        private static int loopId;
+
         //default colors and stuff
         //Pens are used for not filled objects.
         private static Pen linePen = System.Drawing.Pens.Black;
         private static Pen thickPen = new Pen(Color.FromArgb(255, 0, 0, 0), 3);
         //Brushes are used to fill objects.
-        private static Brush inactiveBrush = System.Drawing.Brushes.DarkGray;
-        private static Brush backgroundBrush = System.Drawing.Brushes.LightGray;
-        private static Brush buttonBrush = System.Drawing.Brushes.Red;
-        private static Brush timerBrush = System.Drawing.Brushes.DarkGray;
-        private static Brush timerRecordBrush = System.Drawing.Brushes.Aquamarine;
-        private static Brush timerPlayBrush = System.Drawing.Brushes.Orange;
+        private static Brush buttonBrush = activeBrush;
+        private static Brush timerBrush = stateDefaultBrush;
+        private static Brush timerRecordBrush = stateProgressBrush;
+        private static Brush timerPlayBrush = stateFinishBrush;
 
         private System.Windows.Forms.Timer time;
         private int taktInMS = 3000;
@@ -248,7 +248,7 @@ namespace Test
             }
 
             //counter
-            g.FillRectangle(buttonBrush, counter);
+            g.FillRectangle(backgroundObjectBrush, counter);
             g.FillEllipse(backgroundBrush, counterCurve);
 
             labelTakts = nrOfTakts.ToString();
@@ -259,7 +259,7 @@ namespace Test
                 Mic == ButtonStates.WaitingToRecord) &&
                 !recordInside)
             {
-                g.FillEllipse(inactiveBrush, timer);
+                g.FillEllipse(timerBrush, timer);
             }
             else if (Mic == ButtonStates.Recording ||
                 Mic == ButtonStates.WaitingToEndRecord)
@@ -317,7 +317,7 @@ namespace Test
             }
 
             //inner circle
-            g.FillEllipse(buttonBrush, timerInnerCircle);
+            g.FillEllipse(backgroundObjectBrush, timerInnerCircle);
 
             //places icons
             if (Mic == ButtonStates.RecordEmpty)
@@ -535,6 +535,9 @@ namespace Test
                 }
 
                 //TODO: start recording
+
+                Volume = ButtonStates.Sound;
+                Play = ButtonStates.Playing;
             }
             else if (Mic == ButtonStates.Recording)
             {
@@ -555,9 +558,6 @@ namespace Test
                 playStopWatch = new System.Diagnostics.Stopwatch();
 
                 playStopTime.Interval = loopInMS;
-
-                Volume = ButtonStates.Sound;
-                Play = ButtonStates.Playing;
 
                 //TODO: start playing audio
 
