@@ -35,15 +35,27 @@ namespace Test
         
         private int speedInMS = 60;
 
-        private int sliderWidth = 20; 
+        private int sliderWidth = 20;
+
+        private int ratioSliderImage;
 
 
         private Pen borderPen = Pens.Black;
         private Brush sliderBrush = Brushes.Red;
+        private Brush introBrush = Brushes.Purple;
+        private Brush verseBrush = Brushes.Blue;
+        private Brush chorusBrush = Brushes.Green;
+
 
         private Rectangle nsWindow;
         private Rectangle sliderWindow;
         private Rectangle slider;
+
+        private Rectangle intro;
+        private Rectangle chorus;
+        private Rectangle chorus2;
+        private Rectangle verse;
+        private Rectangle verse2;
 
         // rectangle to crop relevant rectangle from image
         private Rectangle notesTargetRect;
@@ -60,6 +72,7 @@ namespace Test
         private System.Windows.Forms.Timer timer;
 
         private float sliderOffsetHelp;
+        private int oldX;
 
 
         public NoteScroller(String text, Int32 x, Int32 y, Int32 width, Int32 height)
@@ -67,6 +80,7 @@ namespace Test
         {
             widgetWidth = width;
             widgetHeight = height;
+            
 
             nsWindowHeight = (int) (nsToSliderRatio * widgetHeight);
 
@@ -75,14 +89,22 @@ namespace Test
             
             sliderWindow = new Rectangle(0, nsWindowHeight, width, height - nsWindowHeight);
             slider = new Rectangle(0, nsWindowHeight, sliderWidth, height - nsWindowHeight);
-            
+
+            intro = new Rectangle(0, nsWindowHeight, width / 5, height - nsWindowHeight);
+            verse = new Rectangle(width / 5, nsWindowHeight, width / 5 - width / 20, height - nsWindowHeight);
+            chorus = new Rectangle(2 *(width / 5)- width / 20, nsWindowHeight, width / 5 + width / 20, height - nsWindowHeight);
+            verse2 = new Rectangle(3 * (width / 5), nsWindowHeight, width / 5 - width / 20, height - nsWindowHeight);
+            chorus2 = new Rectangle(4 * (width / 5) - width / 20, nsWindowHeight, width / 5 + width / 20, height - nsWindowHeight);
+
 
             // load image. make sure to load in image properties
-            try{
+            try
+            {
                 //notesImage = Image.FromFile("test.bmp");
                 notesImage = Properties.Resources.test;
                 imageWidth = notesImage.Width;
                 notesTargetRect = new Rectangle(0, 0, width, notesImage.Height);
+                ratioSliderImage = (imageWidth - nsWindow.Width) / (sliderWindow.Width - sliderWidth);
 
             } catch (Exception e){
                 Console.WriteLine("Error, make sure to load the picture. " + e);
@@ -106,12 +128,20 @@ namespace Test
             Graphics g = e.Graphics;
             g.DrawRectangle(borderPen, nsWindow);
             g.DrawRectangle(borderPen, sliderWindow);
-            g.DrawRectangle(borderPen, slider);
 
+            g.FillRectangle(introBrush, intro);
+            g.FillRectangle(verseBrush, verse);
+            g.FillRectangle(verseBrush, verse2);
+            g.FillRectangle(chorusBrush, chorus);
+            g.FillRectangle(chorusBrush, chorus2);
+
+
+            g.DrawRectangle(borderPen, slider);
             g.FillRectangle(sliderBrush, slider);
-                      
+
             // draw notesTargetRect into nsWindow
-            g.DrawImage(notesImage, nsWindow, notesTargetRect, GraphicsUnit.Pixel);                 
+            g.DrawImage(notesImage, nsWindow, notesTargetRect, GraphicsUnit.Pixel);      
+                       
            
             base.OnPaint(e);
         }
@@ -124,7 +154,7 @@ namespace Test
             if (notesTargetRect.X + notesTargetRect.Width + pixelInterval < imageWidth)
             {
                 notesTargetRect.X += pixelInterval;
-                slider.X += sliderOffset();
+                slider.X += sliderOffset(pixelInterval);
                 this.Refresh();
 
             }
@@ -139,11 +169,11 @@ namespace Test
        
         
         // calculate how many pixels notesTargetRect has to be moved with every timer tick
-        private int sliderOffset()
+        private int sliderOffset(float interval)
         {
             float ratio = (float) (imageWidth - widgetWidth) / (float) (widgetWidth -  sliderWidth);
             
-            float os = (float) pixelInterval / (float) ratio;
+            float os = (float) interval / (float) ratio;
             sliderOffsetHelp += os % 1;
         
             if (sliderOffsetHelp >= 1)
@@ -167,6 +197,12 @@ namespace Test
 
         }
 
+        private void moveNotes(MouseEventArgs e)
+        {
+            int start = nsWindow.X;
+            float diff = e.X - start;
+        }
+
         protected override void OnMouseClick(MouseEventArgs e)
         {
             base.OnMouseClick(e);
@@ -184,7 +220,40 @@ namespace Test
                     timer.Start();
                 }
                 //if(running)
+
+            // if intro, verse or chorus is clicked, move slider and notesTargetRect to position (hard coded)
+
+            } else if (intro.Contains(new Point(e.X, e.Y)))
+            {
+                notesTargetRect.X = 0;
+                slider.X = 0;
+                finished = false;
             }
+            else if (verse.Contains(new Point(e.X, e.Y)))
+            {
+                notesTargetRect.X = (imageWidth - nsWindow.Width) / 5;
+                slider.X = (sliderWindow.Width - sliderWidth) / 5;
+                finished = false;
+            }
+            else if (chorus.Contains(new Point(e.X, e.Y)))
+            {
+                notesTargetRect.X = 2 * ((imageWidth - nsWindow.Width) / 5) - (imageWidth / 20);
+                slider.X = 2 * ((sliderWindow.Width - sliderWidth) / 5) - sliderWindow.Width / 20;
+                finished = false;
+            }
+            else if (verse2.Contains(new Point(e.X, e.Y)))
+            {
+                notesTargetRect.X = 3 * ((imageWidth - nsWindow.Width) / 5);
+                slider.X = 3 * ((sliderWindow.Width - sliderWidth) / 5);
+                finished = false;
+            }
+            else if (chorus2.Contains(new Point(e.X, e.Y)))
+            {
+                notesTargetRect.X = 4 * ((imageWidth - nsWindow.Width) / 5) - (imageWidth / 20);
+                slider.X = 4 * ((sliderWindow.Width - sliderWidth) / 5) - sliderWindow.Width / 20;
+                finished = false;
+            }
+            this.Refresh();
         }
 
         protected override void OnMouseDown(MouseEventArgs e)
@@ -192,8 +261,13 @@ namespace Test
             base.OnMouseDown(e);
             if (slider.Contains(new Point(e.X, e.Y)))
             {
-                dragMode = true;
+            //    dragMode = true;
                 
+            }
+            if (nsWindow.Contains(new Point(e.X, e.Y)))
+            {
+                oldX = e.X;
+                dragMode = true;
             }
         }
 
@@ -202,40 +276,66 @@ namespace Test
             base.OnMouseUp(e);
             
             dragMode = false;
-           
+                       
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
         {
             base.OnMouseMove(e);
+
+            //dragging: move notesTargetRect to the left or right. The slider has to be positioned too. 
             if (dragMode)
             {
-                
-                slider.X = e.X - sliderWidth / 2;
-
-                if (slider.X < sliderWindow.X) 
+                running = true;
+                if (oldX <= e.X)
                 {
-                    slider.X = sliderWindow.X;
+                    if (slider.X < sliderWindow.X)
+                    {
+                        slider.X = sliderWindow.X;
+                    } else {
+                        slider.X -= (e.X - oldX) / ratioSliderImage;
+                    }
+
+                    notesTargetRect.X = notesTargetRect.X - (e.X - oldX);
+                }
+                else
+                {
+                    if (slider.X >= sliderWindow.X + sliderWindow.Width - sliderWidth)
+                    {
+                        slider.X = sliderWindow.X + sliderWindow.Width - sliderWidth;
+                    }
+                    else
+                    {
+                        slider.X += (oldX - e.X) / ratioSliderImage;
+                    }                                            
+
+                    notesTargetRect.X = notesTargetRect.X + (oldX - e.X);
+                }
+
+                if (notesTargetRect.X < 0)
+                {
+                    notesTargetRect.X = 0;
                     finished = false;
                 }
-                if (slider.X >= sliderWindow.X + sliderWindow.Width - sliderWidth)
+                if (notesTargetRect.X > imageWidth - nsWindow.Width)
                 {
-                    slider.X = sliderWindow.X + sliderWindow.Width - sliderWidth;
+                    notesTargetRect.X = imageWidth - nsWindow.Width;
                     finished = true;
                 }
                 else
                 {
                     finished = false;
+
+
                 }
+
+              
+                oldX = e.X;
                 
+                this.Refresh();
             }
 
-            moveSlider();
-
-            this.Refresh();
         }
-
-
 
     }
 }
