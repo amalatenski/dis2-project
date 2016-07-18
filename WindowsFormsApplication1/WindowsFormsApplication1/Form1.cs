@@ -42,7 +42,7 @@ namespace WindowsFormsApplication1
 
             MuGet muGet2 = new MuGet2DSlider("pete", 300, 25, 150, 150, 0, 1, 0, 1);
             this.Controls.Add(muGet2);
-            muGet2.OnUpdateStatus += muGet_OnUpdateStatus;
+            muGet2.UpdateStatus += muGet_UpdateStatus;
 
 
         }
@@ -62,10 +62,10 @@ namespace WindowsFormsApplication1
 
         //}
 
-        private void muGet_OnUpdateStatus(object sender, StatusEventArgs e)
+        private void muGet_UpdateStatus(object sender, StatusEventArgs e)
         {
-            label1.Text = e.status.Split(new char[] { ' ' })[1];
-            soundEngine.tmp(e.status);
+            label1.Text = e.Status.Split(new char[] { ' ' })[1];
+            soundEngine.tmp(e.Status);
         }
 
         private void Form1_Load(object sender, EventArgs e)

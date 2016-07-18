@@ -106,7 +106,7 @@ namespace Test
             float valueX = ((float)(getMidpoint(slider).X - sliderWidth / 2) / (float)(Width - sliderWidth)) * (endX - startX) + startX;
             float valueY = ((float)(getMidpoint(slider).Y - sliderHeight / 2) / (float)(Height - sliderHeight)) * (startY - endY) + endY;
 
-            UpdateStatus(valueX + " " + valueY);
+            OnUpdateStatus(new StatusEventArgs(valueX + " " + valueY));
         }
 
         private System.Drawing.Point getMidpoint(Rectangle rect)

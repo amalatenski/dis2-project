@@ -72,7 +72,7 @@ namespace Test
         {
             float value = ((float)(getMidpoint(slider).X - sliderWidth / 2 - sliderLineOffset) / (float)(Width - sliderWidth - sliderLineOffset*2)) * (end - start) + start;
 
-            UpdateStatus(value.ToString());
+            OnUpdateStatus(new StatusEventArgs(value.ToString()));
         }
 
         protected override void OnMouseUp(System.Windows.Forms.MouseEventArgs e)

@@ -61,6 +61,10 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BeatEventArgs.cs" />
+    <Compile Include="SoundEngineMissingException.cs" />
+    <Compile Include="TempoChangedEventArgs.cs" />
+    <Compile Include="JumpToNextBeatEventArgs.cs" />
     <Compile Include="EffectClass.cs" />
     <Compile Include="Loop.cs" />
     <Compile Include="NoteScroller.cs">
