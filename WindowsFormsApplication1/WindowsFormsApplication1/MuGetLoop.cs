@@ -15,7 +15,7 @@ namespace Test
      */
     class MuGetLoop : MuGet
     {
-        private static int loopId;
+        private static int loopId = 0;
 
         //default colors and stuff
         //Pens are used for not filled objects.
@@ -92,8 +92,6 @@ namespace Test
         private Rectangle timerInnerCircle;
         private Rectangle counter;
         private Rectangle counterCurve;
-
-        private bool dragMode = false;
 
         private int widgetWidth;
         private int widgetHeight;
@@ -248,7 +246,8 @@ namespace Test
             }
 
             //counter
-            g.FillRectangle(backgroundObjectBrush, counter);
+            g.FillRectangle(stateDefaultBrush, counter);
+            g.FillRectangle(backgroundObjectLightBrush, counter);
             g.FillEllipse(backgroundBrush, counterCurve);
 
             labelTakts = nrOfTakts.ToString();
@@ -317,7 +316,8 @@ namespace Test
             }
 
             //inner circle
-            g.FillEllipse(backgroundObjectBrush, timerInnerCircle);
+            g.FillEllipse(stateDefaultBrush, timerInnerCircle);
+            g.FillEllipse(backgroundObjectLightBrush, timerInnerCircle);
 
             //places icons
             if (Mic == ButtonStates.RecordEmpty)
@@ -535,6 +535,7 @@ namespace Test
                 }
 
                 //TODO: start recording
+                SoundEngine.recordLoop(loopId);
 
                 Volume = ButtonStates.Sound;
                 Play = ButtonStates.Playing;
@@ -551,6 +552,7 @@ namespace Test
                 nrOfTakts += 1;
 
                 //TODO: stop recording
+                SoundEngine.stopRecordLoop(loopId);
 
                 loopInMS = nrOfTakts * taktInMS;
 
@@ -560,6 +562,7 @@ namespace Test
                 playStopTime.Interval = loopInMS;
 
                 //TODO: start playing audio
+                SoundEngine.playLoop(loopId);
 
                 playStopTime.Start();
                 playStopWatch.Start();
@@ -578,6 +581,7 @@ namespace Test
         private void onCustomBar()
         {
             //TODO: play the audio again
+            SoundEngine.playLoop(loopId);
         }
 
         //returns the elapsed time value since the last takt (between 0 and 1)
@@ -665,6 +669,7 @@ namespace Test
                         playStopWatch.Stop();
 
                         //TODO: stop audio
+                        SoundEngine.stopLoop(loopId);
                     }
                     else if (Play == ButtonStates.Stopping)
                     {
@@ -674,6 +679,7 @@ namespace Test
                         playStopWatch.Start();
 
                         //TODO: resume audio
+                        SoundEngine.playLoop(loopId);
                     }
                 }
             }

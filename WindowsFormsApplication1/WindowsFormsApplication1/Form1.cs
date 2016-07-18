@@ -33,7 +33,10 @@ namespace WindowsFormsApplication1
             InitializeComponent();
             //InitAudioGraph();
 
+            
+
             MuGet loop = new MuGetLoop("loop", 25, 25, 250, 150);
+            loop.connectSoundEngine(soundEngine);
             this.Controls.Add(loop);
 
             //this.Controls.Add(new NoteScroller("bla", 25, 200, 300, 100));
