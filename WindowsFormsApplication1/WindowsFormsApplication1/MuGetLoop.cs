@@ -669,7 +669,7 @@ namespace Test
                         playStopWatch.Stop();
 
                         //TODO: stop audio
-                        SoundEngine.stopLoop(loopId);
+                        SoundEngine.pauseLoop(loopId);
                     }
                     else if (Play == ButtonStates.Stopping)
                     {

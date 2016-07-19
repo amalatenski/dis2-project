@@ -33,9 +33,10 @@ namespace WindowsFormsApplication1
             InitializeComponent();
             //InitAudioGraph();
 
-            
+            soundEngine = new SoundEngine();
+            audioLoop = soundEngine.newLoop();
 
-            MuGet loop = new MuGetLoop("loop", 25, 25, 250, 150);
+                MuGet loop = new MuGetLoop("loop", 25, 25, 250, 150);
             loop.connectSoundEngine(soundEngine);
             this.Controls.Add(loop);
 
@@ -71,11 +72,8 @@ namespace WindowsFormsApplication1
             soundEngine.tmp(e.Status);
         }
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            soundEngine = new SoundEngine();
-            audioLoop = soundEngine.newLoop();
-        }
+        private void Form1_Load(object sender, EventArgs e) { }
+        
 
         protected override void OnFormClosed(FormClosedEventArgs e)
         {

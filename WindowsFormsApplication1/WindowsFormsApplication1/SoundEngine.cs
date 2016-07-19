@@ -40,12 +40,12 @@ namespace Test
 
             soundOut = GetSoundOut();
             EchoEffect echo = new EchoEffect();
-            effects.Add(echo);
+            //effects.Add(echo);
             echo.leftDelay = 500;
             echo.rightDelay = 250;
 
-            effects.Add(new DistortionEffect());
-            effects.Add(new ChorusEffect());
+            //effects.Add(new DistortionEffect());
+            //effects.Add(new ChorusEffect());
             soundOut.Initialize(compileEffectChain());
             
             startPlayback();

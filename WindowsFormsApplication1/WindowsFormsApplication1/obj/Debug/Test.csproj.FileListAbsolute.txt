@@ -71,3 +71,15 @@ C:\Users\Niklas\Source\Repos\dis2-project\WindowsFormsApplication1\WindowsFormsA
 C:\Users\Niklas\Source\Repos\dis2-project\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\Test.Properties.Resources.resources
 C:\Users\Niklas\Source\Repos\dis2-project\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\Test.csproj.GenerateResource.Cache
 C:\Users\Niklas\Source\Repos\dis2-project\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\Test.exe
+C:\Users\amala_000\Desktop\Projekt\dis2-project\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\Test.exe.config
+C:\Users\amala_000\Desktop\Projekt\dis2-project\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\Test.pdb
+C:\Users\amala_000\Desktop\Projekt\dis2-project\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\Test.csprojResolveAssemblyReference.cache
+C:\Users\amala_000\Desktop\Projekt\dis2-project\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Form1.resources
+C:\Users\amala_000\Desktop\Projekt\dis2-project\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\Test.Properties.Resources.resources
+C:\Users\amala_000\Desktop\Projekt\dis2-project\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\Test.csproj.GenerateResource.Cache
+C:\Users\amala_000\Desktop\Projekt\dis2-project\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\Test.exe
+C:\Users\amala_000\Desktop\Projekt\dis2-project\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\Test.pdb
+C:\Users\amala_000\Desktop\Projekt\dis2-project\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\CSCore.dll
+C:\Users\amala_000\Desktop\Projekt\dis2-project\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\System.Runtime.WindowsRuntime.dll
+C:\Users\amala_000\Desktop\Projekt\dis2-project\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\CSCore.xml
+C:\Users\amala_000\Desktop\Projekt\dis2-project\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\Test.exe

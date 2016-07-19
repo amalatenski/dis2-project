@@ -10,7 +10,6 @@ E:\Dropbox\DIS2 projekt\WindowsFormsApplication1\WindowsFormsApplication1\obj\Re
 E:\Dropbox\DIS2 projekt\WindowsFormsApplication1\WindowsFormsApplication1\obj\Release\Test.pdb
 C:\Users\amala_000\Desktop\Projekt\dis2-project\WindowsFormsApplication1\WindowsFormsApplication1\bin\Release\Test.exe.config
 C:\Users\amala_000\Desktop\Projekt\dis2-project\WindowsFormsApplication1\WindowsFormsApplication1\obj\Release\Test.pdb
-C:\Users\amala_000\Desktop\Projekt\dis2-project\WindowsFormsApplication1\WindowsFormsApplication1\obj\Release\Test.csprojResolveAssemblyReference.cache
 C:\Users\amala_000\Desktop\Projekt\dis2-project\WindowsFormsApplication1\WindowsFormsApplication1\obj\Release\WindowsFormsApplication1.Form1.resources
 C:\Users\amala_000\Desktop\Projekt\dis2-project\WindowsFormsApplication1\WindowsFormsApplication1\obj\Release\Test.Properties.Resources.resources
 C:\Users\amala_000\Desktop\Projekt\dis2-project\WindowsFormsApplication1\WindowsFormsApplication1\obj\Release\Test.csproj.GenerateResource.Cache
@@ -20,3 +19,4 @@ C:\Users\amala_000\Desktop\Projekt\dis2-project\WindowsFormsApplication1\Windows
 C:\Users\amala_000\Desktop\Projekt\dis2-project\WindowsFormsApplication1\WindowsFormsApplication1\bin\Release\System.Runtime.WindowsRuntime.dll
 C:\Users\amala_000\Desktop\Projekt\dis2-project\WindowsFormsApplication1\WindowsFormsApplication1\bin\Release\CSCore.xml
 C:\Users\amala_000\Desktop\Projekt\dis2-project\WindowsFormsApplication1\WindowsFormsApplication1\obj\Release\Test.exe
+C:\Users\amala_000\Desktop\Projekt\dis2-project\WindowsFormsApplication1\WindowsFormsApplication1\obj\Release\Test.csprojResolveAssemblyReference.cache
