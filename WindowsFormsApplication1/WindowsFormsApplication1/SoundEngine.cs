@@ -24,6 +24,18 @@ namespace Test
         private ISoundOut soundOut;
         public List<EffectClass> effects { get; private set; }
         private List<DmoAggregator> effectChain;
+
+        public float volume
+        {
+            get { return volume; }
+            set
+            {
+                if (volume > 1) volume = 1;
+                if (volume < 0) volume = 0;
+                refreshSound();
+                soundOut.Volume = volume;
+            }
+        }
         
         private List<Loop> loops;
         
@@ -52,7 +64,7 @@ namespace Test
             soundOut.Initialize(compileEffectChain());
             startPlayback();
         }
-
+        
         public void refreshSound()
         {
             newSoundOut(compileEffectChain());
