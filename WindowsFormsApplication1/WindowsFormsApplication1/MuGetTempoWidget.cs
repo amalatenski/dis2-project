@@ -142,14 +142,20 @@ namespace Test
 
             if (mouseDown && (now - downTime) > 1300 && !ignoreClick)
             {
-                MuGetSlider slider = new MuGetSlider("volumeslider", 10, Width / 2 - 50, Width -20, 100, 0, 1);
+                MuGetSlider slider1 = new MuGetSlider("volumeslider", 10, 10, Width - 20, Width / 2 - 60, 0, 1);
+                MuGetSlider slider2 = new MuGetSlider("temposlider", 10, Width / 2 + 50, Width - 20, Width / 2 - 60, 40, 140);
                 ignoreClick = true;
-                slider.setPosition(volume);
-                slider.UpdateStatus += ((_sender, _e) => { volume = slider.value; });
-                slider.ActionEnded += ((_sender, _e) => { ignoreClick = false; slider.Dispose(); });
+                slider1.setPosition(volume);
+                slider1.UpdateStatus += ((_sender, _e) => { volume = slider1.value; });
+                slider1.ActionEnded += ((_sender, _e) => { ignoreClick = false; slider1.Dispose(); slider2.Dispose(); });
+                slider2.setPosition((float)Bpm);
+                slider2.UpdateStatus += ((_sender, _e) => { Bpm = slider2.value; });
+                slider2.ActionEnded += ((_sender, _e) => { ignoreClick = false; slider1.Dispose(); slider2.Dispose(); });
 
-                this.Controls.Add(slider);
-                slider.BringToFront();
+                this.Controls.Add(slider1);
+                this.Controls.Add(slider2);
+                slider1.BringToFront();
+                slider2.BringToFront();
             }
 
             this.Refresh();
