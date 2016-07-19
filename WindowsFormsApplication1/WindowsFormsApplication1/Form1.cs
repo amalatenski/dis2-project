@@ -40,7 +40,7 @@ namespace WindowsFormsApplication1
             MuGet loop2 = new MuGetLoop("loop2", 886, 240, 300, 180);
             this.Controls.Add(loop2);
 
-            MuGetEffects effects = new MuGetEffects("effects", 180, 25, 300, 180, soundEngine);
+            MuGetEffects effects = new MuGetEffects("effects", 180, 25, 300, 180);
             this.Controls.Add(effects);
 
             MuGet muGet2 = new MuGet2DSlider("pete", 240, 240, 180, 180, 0, 1, 0, 1);

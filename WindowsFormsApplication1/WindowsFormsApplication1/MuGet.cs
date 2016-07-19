@@ -58,12 +58,12 @@ namespace Test
         public static Color backgroundObjectColor = Color.SteelBlue;
         public static Color backgroundObjectLightColor = Color.FromArgb(150, backgroundObjectColor);
 
-        private static Color inactiveColor = Color.DarkGray;
-        private static Color activeColor = Color.BurlyWood;
+        public static Color inactiveColor = Color.DarkGray;
+        public static Color activeColor = Color.BurlyWood;
 
-        private static Color stateDefaultColor = Color.Khaki;
-        private static Color stateProgressColor = Color.Yellow;
-        private static Color stateFinishColor = Color.Aquamarine;
+        public static Color stateDefaultColor = Color.Khaki;
+        public static Color stateProgressColor = Color.Yellow;
+        public static Color stateFinishColor = Color.Aquamarine;
 
         public static SolidBrush backgroundBrush = new SolidBrush(backgroundColor);
         public static SolidBrush backgroundObjectBrush = new SolidBrush(backgroundObjectColor);
