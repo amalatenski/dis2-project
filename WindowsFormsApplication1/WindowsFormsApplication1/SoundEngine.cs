@@ -27,13 +27,15 @@ namespace Test
 
         public float volume
         {
-            get { return volume; }
+            get
+            {
+                return soundOut.Volume;
+            }
             set
             {
                 if (volume > 1) volume = 1;
                 if (volume < 0) volume = 0;
-                refreshSound();
-                soundOut.Volume = volume;
+                soundOut.Volume = value;
             }
         }
         
@@ -145,7 +147,7 @@ namespace Test
             effects.Insert(newIndex, effect);
             refreshSound();
         }
-
+        
         public void tmp(string value)
         {
             DmoEchoEffect echo = effectChain[effects.FindIndex(x => x.GetType() == typeof(EchoEffect))] as DmoEchoEffect;
@@ -242,29 +244,6 @@ namespace Test
             //return CodecFactory.Instance.GetCodec(@"C:\Users\Niklas\Dropbox\DIS2 projekt\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\test.wav");
             return CodecFactory.Instance.GetCodec(filename);
         }
-
-
-        //old but gold
-        public void PlayASound()
-        {
-            //Contains the sound to play
-            using (IWaveSource soundSource = GetSoundSource("test.wav"))
-            {
-                //SoundOut implementation which plays the sound
-                using (ISoundOut soundOut = GetSoundOut())
-                {
-                    //Tell the SoundOut which sound it has to play
-                    soundOut.Initialize(soundSource);
-
-                    //Play the sound
-                    soundOut.Play();
-
-                    Thread.Sleep(2000);
-
-                    //Stop the playback
-                    soundOut.Stop();
-                }
-            }
-        }
+        
     }
 }
