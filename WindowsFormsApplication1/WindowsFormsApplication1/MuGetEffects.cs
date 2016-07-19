@@ -42,10 +42,12 @@ namespace Test
                 Margin = new Padding(0, 0, inBarOffset, 0)
             };
             this.Controls.Add(mainSoundBar);
-            mainSoundText = new Label {
+
+            mainSoundText = new Label
+            {
                 //Location = new Point(sideOffset, sideOffset),
                 Height = sideOffset * 4,
-                Width = (2*labelWidth) / 3,
+                Width = (2 * labelWidth) / 3,
                 Text = "Input",
                 TextAlign = ContentAlignment.MiddleCenter,
                 BackColor = backgroundObjectColor
@@ -112,13 +114,14 @@ namespace Test
         
         private void Effect_MouseUp(object sender, MouseEventArgs e)
         {
-            if (effectDragging) {
+            if (effectDragging)
+            {
                 Label tmp = sender as Label;
                 Point location = this.PointToClient(tmp.PointToScreen(e.Location));
                 if (mainSoundBar.Bounds.Contains(location))
                 {
                     Console.WriteLine(mainSoundBar.GetChildAtPoint(location));
-                            Label effect = new Label
+                    Label effect = new Label
                     {
                         //Location = new Point(mainSoundBar.Bounds.X + mainSoundText.Width + inBarOffset*(1+effectLabels.Count) + effectDrag.Width*effectLabels.Count, mainSoundBar.Y),
                         Width = effectDrag.Width,
@@ -182,6 +185,6 @@ namespace Test
         {
             base.OnMouseMove(e);
         }
-        
+
     }
 }
