@@ -152,6 +152,11 @@ namespace Test
             return loop.id;
         }
 
+        public void setVolumeLoop(int id, float volume)
+        {
+            loops.Find(x => x.id == id).setVolume(volume);
+        }
+
         public void recordLoop(int id)
         {
             loops.Find(x => x.id == id).record();
