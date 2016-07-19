@@ -13,7 +13,7 @@ namespace Test
         private Brush barColor = backgroundObjectLightBrush;
 
         private int sideOffset;
-        private int labelWidth = 40;
+        private int labelWidth = 55;
         private int inBarOffset = 7;
         private List<Tuple<Label, EffectClass>> effectRefereence;
         private FlowLayoutPanel mainSoundBar;
