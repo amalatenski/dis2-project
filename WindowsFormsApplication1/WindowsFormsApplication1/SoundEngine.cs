@@ -38,7 +38,7 @@ namespace Test
             soundOut = GetSoundOut();
 
             //IWaveSource waveSource = GetSoundSource(@"E:\Musik\Music\Unknown Artist\Unknown Album\Here's to the people.wav");
-            
+
             //effects.Add(new DistortionEffect());
             //effects.Add(new ChorusEffect());
             //EchoEffect echo = new EchoEffect();
