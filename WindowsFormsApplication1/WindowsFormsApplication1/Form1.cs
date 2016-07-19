@@ -40,21 +40,15 @@ namespace WindowsFormsApplication1
             MuGet loop2 = new MuGetLoop("loop2", 886, 240, 300, 180);
             this.Controls.Add(loop2);
 
-            MuGetEffects effects = new MuGetEffects("effects", 180, 25, 300, 180);
+            MuGetEffects effects = new MuGetEffects("effects", 180, 25, 260, 180);
             this.Controls.Add(effects);
-
-            MuGet muGet2 = new MuGet2DSlider("pete", 240, 240, 180, 180, 0, 1, 0, 1);
-            this.Controls.Add(muGet2);
-            //muGet2.UpdateStatus += muGet_UpdateStatus;
-
+            
             this.Controls.Add(new NoteScroller("bla", 50, 500, 1016, 200));
 
             MuGet muGet3 = new MuGetTempoWidget("tempo", 1116, 500, 200);
             this.Controls.Add(muGet3);
 
-            
-
-            
+                                  
 
 
             soundEngine = new SoundEngine();
@@ -79,12 +73,6 @@ namespace WindowsFormsApplication1
         //    audioGraph = result.Graph;
 
         //}
-
-        private void muGet_UpdateStatus(object sender, StatusEventArgs e)
-        {
-            //label1.Text = e.Status.Split(new char[] { ' ' })[1];
-            soundEngine.tmp(e.Status);
-        }
 
         private void Form1_Load(object sender, EventArgs e)
         {

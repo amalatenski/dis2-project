@@ -529,13 +529,12 @@ namespace Test
                 waitingToRecord = false;
                 nrOfTakts = 0;
 
-                if (recordInside)
+                if (!recordInside)
                 {
-                    //TODO: remove audio
+                    loopId = SoundEngine.newLoop();
                 }
 
                 //TODO: start recording
-                loopId = SoundEngine.newLoop();
                 SoundEngine.recordLoop(loopId);
 
                 Volume = ButtonStates.Sound;
@@ -564,6 +563,7 @@ namespace Test
 
                 //TODO: start playing audio
                 SoundEngine.playLoop(loopId);
+                SoundEngine.setVolumeLoop(loopId, 1);
 
                 playStopTime.Start();
                 playStopWatch.Start();
@@ -650,11 +650,13 @@ namespace Test
                     {
                         Volume = ButtonStates.Mute;
                         //TODO: mute sound
+                        SoundEngine.setVolumeLoop(loopId, 0);
                     }
                     else if (Volume == ButtonStates.Mute)
                     {
                         Volume = ButtonStates.Sound;
                         //TODO: unmute sound
+                        SoundEngine.setVolumeLoop(loopId, 1);
                     }
                 }
             }

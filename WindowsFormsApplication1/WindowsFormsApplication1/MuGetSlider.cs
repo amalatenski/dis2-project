@@ -16,11 +16,12 @@ namespace Test
     class MuGetSlider : MuGet
     {
         public delegate void actionEndedHandler(object sender, EventArgs e);
-        public static event actionEndedHandler actionEnded;
+        public event actionEndedHandler ActionEnded;
 
         //default colors and stuff
         //Pens are used for not filled objects.
         private static Pen linePen = new Pen(backgroundObjectBrush);
+        private static Font textFont = System.Drawing.SystemFonts.DefaultFont;
         //Brushes are used to fill objects.
         private static Brush sliderBrush = activeBrush;
         private static Int32 sliderWidth = 10;
@@ -29,6 +30,8 @@ namespace Test
 
         private Rectangle slider;
         private bool dragMode = false;
+
+        public float value { get; private set; }
 
         float start;
         float end;
@@ -49,6 +52,12 @@ namespace Test
             Graphics g = e.Graphics;
             g.DrawLine(linePen, new System.Drawing.Point(sliderLineOffset, (int)this.Height/2), new System.Drawing.Point(this.Width-sliderLineOffset, this.Height/2));
             g.FillRectangle(sliderBrush, slider);
+
+            g.DrawString(start.ToString(), textFont, backgroundObjectBrush, new System.Drawing.Point(0, Height / 2));
+            int tmp = (int)g.MeasureString(end.ToString(), textFont).Width;
+            g.DrawString(end.ToString(), textFont, backgroundObjectBrush, new System.Drawing.Point(Width - tmp, Height / 2));
+
+            g.DrawString(value.ToString("F01"), textFont, backgroundObjectBrush, new System.Drawing.Point(slider.X + sliderWidth, slider.Y + sliderHeight / 2));
 
             //calls the OnPaint of the base class. Without this the border would disappear.
             base.OnPaint(e);
@@ -71,9 +80,17 @@ namespace Test
             dragMode = true;
         }
 
+        public void setPosition(float value)
+        {
+            if (value > end) value = end;
+            if (value < start) value = start;
+            slider.X = (int)((value - start) / (end - start) * (float)(Width - sliderWidth - sliderLineOffset*2)) + sliderLineOffset;
+            this.value = value;
+        }
+
         public void updateStatus()
         {
-            float value = ((float)(getMidpoint(slider).X - sliderWidth / 2 - sliderLineOffset) / (float)(Width - sliderWidth - sliderLineOffset*2)) * (end - start) + start;
+            value = ((float)(getMidpoint(slider).X - sliderWidth / 2 - sliderLineOffset) / (float)(Width - sliderWidth - sliderLineOffset*2)) * (end - start) + start;
 
             OnUpdateStatus(new StatusEventArgs(value.ToString()));
         }
@@ -82,7 +99,7 @@ namespace Test
         {
             base.OnMouseUp(e);
             dragMode = false;
-            if (actionEnded != null) actionEnded(this, new EventArgs());
+            OnActionEnded();
         }
 
         protected override void OnMouseMove(System.Windows.Forms.MouseEventArgs e)
@@ -118,6 +135,14 @@ namespace Test
 
             Rectangle rect = new Rectangle(rectX, rectY, sizeX, sizeY);
             return rect;
+        }
+        protected virtual void OnActionEnded()
+        {
+            actionEndedHandler handler = ActionEnded;
+            if (handler != null)
+            {
+                handler(this, new EventArgs());
+            }
         }
     }
 }

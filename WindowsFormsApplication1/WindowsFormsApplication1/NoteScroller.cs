@@ -29,33 +29,47 @@ namespace Test
 
         // pixelInterval is the number of pixels the picture is moved every timer tick
 
-        private int pixelInterval = 10;
+        private int pixelInterval;
         
         // time between timer ticks
         
-        private int speedInMS = 60;
+        private int speedInMS = 50;
 
         private int sliderWidth = 20;
 
         private int ratioSliderImage;
 
+        
+        private static Color inactiveColor = Color.FromArgb(50, Color.Red);
+
+        private static Color introColor = Color.FromArgb(127, 202, 219);
+        private static Color verseColor = Color.FromArgb(20, 82, 96);
+        private static Color chorusColor = Color.FromArgb(41, 115, 132);
+        private static Color sliderColor = Color.FromArgb(254, 178, 119);
+
+
+
 
         private Pen borderPen = Pens.Black;
-        private Brush sliderBrush = Brushes.Red;
-        private Brush introBrush = Brushes.Purple;
-        private Brush verseBrush = Brushes.Blue;
-        private Brush chorusBrush = Brushes.Green;
+        private SolidBrush sliderBrush = new SolidBrush(sliderColor);
+        private SolidBrush introBrush = new SolidBrush(introColor);
+        private SolidBrush verseBrush = new SolidBrush(verseColor);
+        private SolidBrush chorusBrush = new SolidBrush(chorusColor);
+        private SolidBrush passedBrush = new SolidBrush(inactiveColor);
+
 
 
         private Rectangle nsWindow;
         private Rectangle sliderWindow;
         private Rectangle slider;
+        private Rectangle inactiveRect;
 
         private Rectangle intro;
         private Rectangle chorus;
         private Rectangle chorus2;
         private Rectangle verse;
         private Rectangle verse2;
+        
 
         // rectangle to crop relevant rectangle from image
         private Rectangle notesTargetRect;
@@ -73,6 +87,7 @@ namespace Test
 
         private float sliderOffsetHelp;
         private int oldX;
+        private double pixelOffset = 0;
 
 
         public NoteScroller(String text, Int32 x, Int32 y, Int32 width, Int32 height)
@@ -80,8 +95,9 @@ namespace Test
         {
             widgetWidth = width;
             widgetHeight = height;
-            
 
+            pixelInterval = setPixelInterval();
+            MuGet.TempoChanged += tempoChangedPixelInterval;
             nsWindowHeight = (int) (nsToSliderRatio * widgetHeight);
 
             // notescroller window
@@ -101,7 +117,7 @@ namespace Test
             try
             {
                 //notesImage = Image.FromFile("test.bmp");
-                notesImage = Properties.Resources.test;
+                notesImage = Properties.Resources.notes;
                 imageWidth = notesImage.Width;
                 notesTargetRect = new Rectangle(0, 0, width, notesImage.Height);
                 ratioSliderImage = (imageWidth - nsWindow.Width) / (sliderWindow.Width - sliderWidth);
@@ -136,16 +152,24 @@ namespace Test
             g.FillRectangle(chorusBrush, chorus2);
 
 
-            g.DrawRectangle(borderPen, slider);
+            //g.DrawRectangle(borderPen, slider);
             g.FillRectangle(sliderBrush, slider);
 
             // draw notesTargetRect into nsWindow
             g.DrawImage(notesImage, nsWindow, notesTargetRect, GraphicsUnit.Pixel);      
                        
-           
+            inactiveRect = new Rectangle(0, nsWindowHeight, slider.X, sliderWindow.Height);
+            g.FillRectangle(passedBrush, inactiveRect);
+
+
             base.OnPaint(e);
         }
 
+
+        private void tempoChangedPixelInterval(object source, EventArgs e)
+        {
+            pixelInterval = setPixelInterval();
+        }
        
         // with every timer tick, move notesTargetRect to the side
         private void timer_tick(object source, EventArgs e)
@@ -203,6 +227,28 @@ namespace Test
             float diff = e.X - start;
         }
 
+        private int setPixelInterval()
+        {
+            double bpm = Bpm;
+            double msPerBeat = 60000 / bpm;
+            double msPerBar = 6 * msPerBeat;
+
+
+
+            double result = ( (speedInMS / msPerBar) * 448);
+           
+            pixelOffset += result % 1;
+            if (pixelOffset >= 1)
+            {
+                result++;
+                pixelOffset--;
+            }
+
+            return (int)result + 2;
+
+
+        }
+
         protected override void OnMouseClick(MouseEventArgs e)
         {
             base.OnMouseClick(e);
@@ -255,6 +301,8 @@ namespace Test
             }
             this.Refresh();
         }
+
+
 
         protected override void OnMouseDown(MouseEventArgs e)
         {

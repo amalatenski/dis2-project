@@ -16,7 +16,7 @@ namespace Test
     class MuGet2DSlider : MuGet
     {
         public delegate void actionEndedHandler(object sender, EventArgs e);
-        public static event actionEndedHandler actionEnded;
+        public event actionEndedHandler ActionEnded;
 
         //default colors and stuff
         //Pens are used for not filled objects.
@@ -61,8 +61,8 @@ namespace Test
             int tmp = (int)g.MeasureString(endX.ToString(), textFont).Width;
             g.DrawString(endX.ToString(), textFont, backgroundObjectBrush, new System.Drawing.Point(Width - tmp, Height / 2));
 
-            g.DrawString(startY.ToString(), textFont, backgroundObjectBrush, new System.Drawing.Point(Width / 2, 0));
-            g.DrawString(endY.ToString(), textFont, backgroundObjectBrush, new System.Drawing.Point(Width / 2, Height - textFont.Height));
+            g.DrawString(endY.ToString(), textFont, backgroundObjectBrush, new System.Drawing.Point(Width / 2, 0));
+            g.DrawString(startY.ToString(), textFont, backgroundObjectBrush, new System.Drawing.Point(Width / 2, Height - textFont.Height));
 
             g.DrawString(valueX.ToString("F01"), textFont, backgroundObjectBrush, new System.Drawing.Point(slider.X + sliderWidth, slider.Y + sliderHeight / 2));
             g.DrawString(valueY.ToString("F01"), textFont, backgroundObjectBrush, new System.Drawing.Point(slider.X + sliderWidth / 2, slider.Y + sliderHeight));
@@ -72,7 +72,6 @@ namespace Test
             //calls the OnPaint of the base class. Without this the border would disappear.
             base.OnPaint(e);
         }
-
         
         protected override void OnMouseDown(System.Windows.Forms.MouseEventArgs e)
         {
@@ -99,7 +98,7 @@ namespace Test
             linePen = new Pen(backgroundObjectColor);
             this.Refresh();
             dragMode = false;
-            if (actionEnded != null) actionEnded(this, new EventArgs());
+            OnActionEnded();
         }
 
         protected override void OnMouseMove(System.Windows.Forms.MouseEventArgs e)
@@ -119,6 +118,18 @@ namespace Test
                 //Repaints the widget. Othewise the new position would not be drawn.
                 this.Refresh();
             }
+        }
+
+        public void setPosition (float valueX, float valueY)
+        {
+            if (valueX > endX) valueX = endX;
+            if (valueX < startX) valueX = startX;
+            if (valueY > endY) valueY = endY;
+            if (valueY < startY) valueY = startY;
+            slider.X = (int)((valueX - startX) / (endX - startX) * (float)(Width - sliderWidth));
+            slider.Y = (int)((valueY - endY) / (startY - endY) * (float)(Height - sliderHeight));
+            this.valueX = valueX;
+            this.valueY = valueY;
         }
 
         public void updateStatus()
@@ -145,6 +156,15 @@ namespace Test
 
             Rectangle rect = new Rectangle(rectX, rectY, sizeX, sizeY);
             return rect;
+        }
+
+        protected virtual void OnActionEnded()
+        {
+            actionEndedHandler handler = ActionEnded;
+            if (handler != null)
+            {
+                handler(this, new EventArgs());
+            }
         }
     }
 }
