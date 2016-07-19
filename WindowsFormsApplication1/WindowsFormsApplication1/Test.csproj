@@ -62,6 +62,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BeatEventArgs.cs" />
+    <Compile Include="MuGetTempoWidget.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="SoundEngineMissingException.cs" />
     <Compile Include="TempoChangedEventArgs.cs" />
     <Compile Include="JumpToNextBeatEventArgs.cs" />

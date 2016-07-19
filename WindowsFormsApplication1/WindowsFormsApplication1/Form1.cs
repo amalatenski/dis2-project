@@ -44,7 +44,8 @@ namespace WindowsFormsApplication1
             this.Controls.Add(muGet2);
             muGet2.UpdateStatus += muGet_UpdateStatus;
 
-
+            MuGet muGet3 = new MuGetTempoWidget("tempo", 180, 200, 150);
+            this.Controls.Add(muGet3);
         }
 
         //private async Task InitAudioGraph()
