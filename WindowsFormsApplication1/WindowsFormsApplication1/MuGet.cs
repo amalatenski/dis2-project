@@ -53,9 +53,9 @@ namespace Test
         private static Color backgroundObjectLightColor = Color.FromArgb(150, backgroundObjectColor);
 
         private static Color inactiveColor = Color.DarkGray;
-        private static Color activeColor = Color.SandyBrown;
+        private static Color activeColor = Color.BurlyWood;
 
-        private static Color stateDefaultColor = Color.Beige;
+        private static Color stateDefaultColor = Color.Khaki;
         private static Color stateProgressColor = Color.Yellow;
         private static Color stateFinishColor = Color.Aquamarine;
 
