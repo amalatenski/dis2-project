@@ -48,6 +48,9 @@ namespace WindowsFormsApplication1
             muGet2.UpdateStatus += muGet_UpdateStatus;
 
 
+            soundEngine = new SoundEngine();
+            loop.connectSoundEngine(soundEngine);
+            audioLoop = soundEngine.newLoop();
         }
 
         //private async Task InitAudioGraph()
@@ -73,8 +76,6 @@ namespace WindowsFormsApplication1
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            soundEngine = new SoundEngine();
-            audioLoop = soundEngine.newLoop();
         }
 
         protected override void OnFormClosed(FormClosedEventArgs e)
@@ -101,59 +102,5 @@ namespace WindowsFormsApplication1
         }
 
     }
-
-    class DSPGain : ISampleSource
-    {
-        ISampleSource _source;
-        public DSPGain(ISampleSource source)
-        {
-            if (source == null)
-                throw new ArgumentNullException("source");
-            _source = source;
-        }
-        public int Read(float[] buffer, int offset, int count)
-        {
-            float gainAmplification = (float)(Math.Pow(10.0, GainDB / 20.0));
-            int samples = _source.Read(buffer, offset, count);
-            for (int i = offset; i < offset + samples; i++)
-            {
-                buffer[i] = Math.Max(Math.Min(buffer[i] * gainAmplification, 1), -1);
-            }
-            return samples;
-        }
-
-        public float GainDB { get; set; }
-
-        public bool CanSeek
-        {
-            //get { return _source.CanSeek; }
-            get { return true; }
-        }
-
-        public WaveFormat WaveFormat
-        {
-            get { return _source.WaveFormat; }
-        }
-
-        public long Position
-        {
-            get
-            {
-                return _source.Position;
-            }
-            set
-            {
-                _source.Position = value;
-            }
-        }
-
-        public long Length
-        {
-            get { return _source.Length; }
-        }
-
-        public void Dispose()
-        {
-        }
-    }
+    
 }
