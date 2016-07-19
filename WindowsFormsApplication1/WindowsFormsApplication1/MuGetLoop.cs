@@ -529,13 +529,12 @@ namespace Test
                 waitingToRecord = false;
                 nrOfTakts = 0;
 
-                if (recordInside)
+                if (!recordInside)
                 {
-                    //TODO: remove audio
+                    loopId = SoundEngine.newLoop();
                 }
 
                 //TODO: start recording
-                loopId = SoundEngine.newLoop();
                 SoundEngine.recordLoop(loopId);
 
                 Volume = ButtonStates.Sound;
