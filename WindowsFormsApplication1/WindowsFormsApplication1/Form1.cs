@@ -33,9 +33,14 @@ namespace WindowsFormsApplication1
             InitializeComponent();
             //InitAudioGraph();
 
+            
+
             MuGet loop = new MuGetLoop("loop", 25, 25, 250, 150);
+            loop.connectSoundEngine(soundEngine);
             this.Controls.Add(loop);
 
+            MuGetEffects effects = new MuGetEffects("effects", 25, 200, 300, 100);
+            this.Controls.Add(effects);
             //this.Controls.Add(new NoteScroller("bla", 25, 200, 300, 100));
             //MuGet muGet = new MuGet2DSlider("bla", 25, 25, 150, 150);
             //this.Controls.Add(muGet);
@@ -46,6 +51,12 @@ namespace WindowsFormsApplication1
 
             MuGet muGet3 = new MuGetTempoWidget("tempo", 180, 200, 150);
             this.Controls.Add(muGet3);
+
+
+            soundEngine = new SoundEngine();
+            loop.connectSoundEngine(soundEngine);
+            effects.connectSoundEngine(soundEngine);
+            audioLoop = soundEngine.newLoop();
         }
 
         //private async Task InitAudioGraph()
@@ -71,8 +82,6 @@ namespace WindowsFormsApplication1
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            soundEngine = new SoundEngine();
-            audioLoop = soundEngine.newLoop();
         }
 
         protected override void OnFormClosed(FormClosedEventArgs e)
@@ -99,59 +108,5 @@ namespace WindowsFormsApplication1
         }
 
     }
-
-    class DSPGain : ISampleSource
-    {
-        ISampleSource _source;
-        public DSPGain(ISampleSource source)
-        {
-            if (source == null)
-                throw new ArgumentNullException("source");
-            _source = source;
-        }
-        public int Read(float[] buffer, int offset, int count)
-        {
-            float gainAmplification = (float)(Math.Pow(10.0, GainDB / 20.0));
-            int samples = _source.Read(buffer, offset, count);
-            for (int i = offset; i < offset + samples; i++)
-            {
-                buffer[i] = Math.Max(Math.Min(buffer[i] * gainAmplification, 1), -1);
-            }
-            return samples;
-        }
-
-        public float GainDB { get; set; }
-
-        public bool CanSeek
-        {
-            //get { return _source.CanSeek; }
-            get { return true; }
-        }
-
-        public WaveFormat WaveFormat
-        {
-            get { return _source.WaveFormat; }
-        }
-
-        public long Position
-        {
-            get
-            {
-                return _source.Position;
-            }
-            set
-            {
-                _source.Position = value;
-            }
-        }
-
-        public long Length
-        {
-            get { return _source.Length; }
-        }
-
-        public void Dispose()
-        {
-        }
-    }
+    
 }

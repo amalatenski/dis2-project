@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CSCore;
-using CSCore;
 using CSCore.SoundIn;
 using CSCore.SoundOut;
 using CSCore.Streams;

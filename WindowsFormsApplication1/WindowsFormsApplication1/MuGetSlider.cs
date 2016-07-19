@@ -17,9 +17,9 @@ namespace Test
     {
         //default colors and stuff
         //Pens are used for not filled objects.
-        private static Pen linePen = System.Drawing.Pens.Black;
+        private static Pen linePen = new Pen(backgroundObjectBrush);
         //Brushes are used to fill objects.
-        private static Brush sliderBrush = System.Drawing.Brushes.Red;
+        private static Brush sliderBrush = activeBrush;
         private static Int32 sliderWidth = 10;
         private static Int32 sliderHeight = 20;
         private static Int32 sliderLineOffset = 10;

@@ -53,37 +53,21 @@ namespace Test
         private static Pen borderPen = System.Drawing.Pens.Black;
         private static Pen hoverPen = System.Drawing.Pens.White;
         private static Color hoverColor = Color.DarkGray;
-        /*
-        private static Color backgroundColor = Color.FromArgb(255, 243, 244, 236);
-        private static Color backgroundObjectColor = Color.FromArgb(255, 204, 207, 188);
-        //evtl. 178, 182, 154 für noch dunkler
 
-        private static Color brownWeakColor = Color.FromArgb(255, 208, 169, 118);
-        private static Color brownStrongColor = Color.FromArgb(255, 180, 137, 80);
-        //evtl. 163, 123, 69 für noch dunkler
+        public static Color backgroundColor = Color.LightYellow;
+        public static Color backgroundObjectColor = Color.SteelBlue;
+        public static Color backgroundObjectLightColor = Color.FromArgb(150, backgroundObjectColor);
 
-        private static Color greenWeakColor = Color.FromArgb(255, 179, 198, 56);
-        private static Color greenMediumColor = Color.FromArgb(255, 155, 171, 49);
-        private static Color greenStrongColor = Color.FromArgb(255, 134, 148, 42);
-        // 107, 159, 89
-        // 92, 137, 77
-        // 80, 118, 66
-        */
+        public static Color inactiveColor = Color.DarkGray;
+        public static Color activeColor = Color.SandyBrown;
 
-        private static Color backgroundColor = Color.LightYellow;
-        private static Color backgroundObjectColor = Color.SteelBlue;
-        //evtl. 178, 182, 154 für noch dunkler
-
-        private static Color inactiveColor = Color.DarkGray;
-        private static Color activeColor = Color.SandyBrown;
-        //evtl. 163, 123, 69 für noch dunkler
-
-        private static Color stateDefaultColor = Color.Beige;
-        private static Color stateProgressColor = Color.Yellow;
-        private static Color stateFinishColor = Color.Aquamarine;
+        public static Color stateDefaultColor = Color.Beige;
+        public static Color stateProgressColor = Color.Yellow;
+        public static Color stateFinishColor = Color.Aquamarine;
 
         public static SolidBrush backgroundBrush = new SolidBrush(backgroundColor);
         public static SolidBrush backgroundObjectBrush = new SolidBrush(backgroundObjectColor);
+        public static SolidBrush backgroundObjectLightBrush = new SolidBrush(backgroundObjectLightColor);
 
         public static SolidBrush inactiveBrush = new SolidBrush(inactiveColor);
         public static SolidBrush activeBrush = new SolidBrush(activeColor);
@@ -141,6 +125,8 @@ namespace Test
         // amount of current Takt that has already passed (0.0 = nothing, 1.0 = full Takt passed)
         public static double TaktFractionPassed { get { return (TaktPosition + (BeatPosition / BeatLength)) / TaktLength; } }
 
+        // global takt stopwatch
+        public static Stopwatch stopwatchGlobal; // 2ND STOPWATCH
 
 
         /*************** ADDITIONS FOR TEMPO SETTING *************/
@@ -156,6 +142,7 @@ namespace Test
             if (TaktPosition >= TaktLength)
             {
                 TaktPosition = 0;
+                stopwatchGlobal.Restart(); // 2ND STOPWATCH
             }
             Waiting = false;          // in case we were
             timer.Enabled = true;
@@ -184,6 +171,8 @@ namespace Test
             bpm = 120; // This sets BeatLength to 500.
             MuGet.instances = new List<MuGet>();
 
+            stopwatchGlobal = new System.Diagnostics.Stopwatch();// 2ND STOPWATCH
+            stopwatchGlobal.Start();// 2ND STOPWATCH
             TaktPosition = 0;
             timer = new Timer();
             timer.Interval = 17;
@@ -210,6 +199,7 @@ namespace Test
                         if (TaktPosition >= TaktLength)
                         {
                             TaktPosition = 0;
+                            stopwatchGlobal.Restart();//2ND STOPWATCH
                         }
                         foreach (MuGet instance in instances) instance.OnBeat(new BeatEventArgs(TaktPosition));
                     }
