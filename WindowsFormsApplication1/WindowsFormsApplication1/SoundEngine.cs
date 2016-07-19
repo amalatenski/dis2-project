@@ -38,17 +38,9 @@ namespace Test
             soundOut = GetSoundOut();
 
             //IWaveSource waveSource = GetSoundSource(@"E:\Musik\Music\Unknown Artist\Unknown Album\Here's to the people.wav");
-
-<<<<<<< HEAD
-            soundOut = GetSoundOut();
-            EchoEffect echo = new EchoEffect();
-            //effects.Add(echo);
-            echo.leftDelay = 500;
-            echo.rightDelay = 250;
-
+            
             //effects.Add(new DistortionEffect());
             //effects.Add(new ChorusEffect());
-=======
             //EchoEffect echo = new EchoEffect();
             //effects.Add(echo);
             //echo.leftDelay = 500;
@@ -57,10 +49,13 @@ namespace Test
             //effects.Add(new DistortionEffect());
             //effects.Add(new ChorusEffect());
 
-
->>>>>>> ff710532a4711b7ded18b1109ffbae0396503833
             soundOut.Initialize(compileEffectChain());
             startPlayback();
+        }
+
+        public void refreshSound()
+        {
+            newSoundOut(compileEffectChain());
         }
 
         private void newSoundOut(IWaveSource source)
@@ -123,21 +118,20 @@ namespace Test
         public void newEffect (EffectClass effect)
         {
             effects.Add(effect);
-            newSoundOut(compileEffectChain());
+            refreshSound();
         }
 
         public void removeEffect (EffectClass effect)
         {
             effects.Remove(effect);
-            newSoundOut(compileEffectChain());
-            newSoundOut(compileEffectChain());
+            refreshSound();
         }
 
         public void moveEffectTo (EffectClass effect, int newIndex)
         {
             effects.Remove(effect);
             effects.Insert(newIndex, effect);
-            newSoundOut(compileEffectChain());
+            refreshSound();
         }
 
         public void tmp(string value)
