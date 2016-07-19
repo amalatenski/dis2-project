@@ -61,6 +61,7 @@ namespace WindowsFormsApplication1
             loop1.connectSoundEngine(soundEngine);
             loop2.connectSoundEngine(soundEngine);
             effects.connectSoundEngine(soundEngine);
+            muGet3.connectSoundEngine(soundEngine);
             audioLoop = soundEngine.newLoop();
         }
 

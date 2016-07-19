@@ -14,8 +14,8 @@ namespace Test
     {
         /************** FIELDS ************/
 
-        private static Timer timer;
-        private static Stopwatch stopwatch;
+        protected static Timer timer;
+        protected static Stopwatch stopwatch;
         private static List<MuGet> instances;
 
         public SoundEngine SoundEngine { get; private set; }
@@ -48,11 +48,11 @@ namespace Test
 
         /************* COLORS, PENS, BRUSHES ***********/
 
-        private Pen currentPen;
+        protected Pen currentPen;
 
-        private static Pen borderPen = System.Drawing.Pens.Black;
-        private static Pen hoverPen = System.Drawing.Pens.White;
-        private static Color hoverColor = Color.DarkGray;
+        protected static Pen borderPen = System.Drawing.Pens.Black;
+        protected static Pen hoverPen = System.Drawing.Pens.White;
+        protected static Color hoverColor = Color.DarkGray;
 
         public static Color backgroundColor = Color.LightYellow;
         public static Color backgroundObjectColor = Color.SteelBlue;
@@ -63,7 +63,7 @@ namespace Test
 
         public static Color stateDefaultColor = Color.Khaki;
         public static Color stateProgressColor = Color.Yellow;
-        public static Color stateFinishColor = Color.Aquamarine;
+        public static Color stateFinishColor = Color.LightBlue;
 
         public static SolidBrush backgroundBrush = new SolidBrush(backgroundColor);
         public static SolidBrush backgroundObjectBrush = new SolidBrush(backgroundObjectColor);
@@ -122,11 +122,17 @@ namespace Test
         // # of current tick in beat (starting from 0)
         public static int BeatPosition { get { return (int)(stopwatch.ElapsedMilliseconds - lastPosition); } }
 
+
+        // amount of current Beat that has already passed (0.0 = nothing, 1.0 = full Takt passed)
+        public static double BeatFractionPassed { get { return (BeatPosition / BeatLength); } }
+
         // amount of current Takt that has already passed (0.0 = nothing, 1.0 = full Takt passed)
         public static double TaktFractionPassed { get { return (TaktPosition + (BeatPosition / BeatLength)) / TaktLength; } }
+        
+        public static double BeatDelta { get { return Math.Min(BeatPosition, BeatLength - BeatPosition); } }
 
         // global takt stopwatch
-        public static Stopwatch stopwatchGlobal; // 2ND STOPWATCH
+        //public static Stopwatch stopwatchGlobal; // 2ND STOPWATCH
 
 
         /*************** ADDITIONS FOR TEMPO SETTING *************/
@@ -142,14 +148,12 @@ namespace Test
             if (TaktPosition >= TaktLength)
             {
                 TaktPosition = 0;
-                stopwatchGlobal.Restart(); // 2ND STOPWATCH
+                //stopwatchGlobal.Restart(); // 2ND STOPWATCH
             }
-            Waiting = false;          // in case we were
+            Waiting = false;         
             timer.Enabled = true;
-            if (JumpToNextBeat != null)
-            {
-                JumpToNextBeat(this, new JumpToNextBeatEventArgs(TaktPosition, oldBeatPosition));
-            }
+            stopwatch.Start();
+            foreach (MuGet instance in instances) instance.OnJumpToNextBeat(new JumpToNextBeatEventArgs(TaktPosition, oldBeatPosition));
          }
 
         protected void waitForNextBeat()
@@ -168,11 +172,11 @@ namespace Test
         // Static constructor to setup Timer as well as TaktLength and Bpm/BeatLength defaults
         static MuGet() {
             TaktLength = 4;
-            bpm = 120; // This sets BeatLength to 500.
+            bpm = 72; // This sets BeatLength too.
             MuGet.instances = new List<MuGet>();
 
-            stopwatchGlobal = new System.Diagnostics.Stopwatch();// 2ND STOPWATCH
-            stopwatchGlobal.Start();// 2ND STOPWATCH
+            //stopwatchGlobal = new System.Diagnostics.Stopwatch();// 2ND STOPWATCH
+            //stopwatchGlobal.Start();// 2ND STOPWATCH
             TaktPosition = 0;
             timer = new Timer();
             timer.Interval = 17;
@@ -199,7 +203,7 @@ namespace Test
                         if (TaktPosition >= TaktLength)
                         {
                             TaktPosition = 0;
-                            stopwatchGlobal.Restart();//2ND STOPWATCH
+                            //stopwatchGlobal.Restart();//2ND STOPWATCH
                         }
                         foreach (MuGet instance in instances) instance.OnBeat(new BeatEventArgs(TaktPosition));
                     }

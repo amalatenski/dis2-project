@@ -155,6 +155,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="icons\Crowd.jpg" />
+    <Content Include="metronom-klack.wav" />
+    <Content Include="metronom-pling.wav" />
     <Content Include="test.bmp" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -28,7 +28,7 @@ namespace Test
         private static Brush timerPlayBrush = stateFinishBrush;
 
         private System.Windows.Forms.Timer time;
-        private int taktInMS = 3000;
+        private int taktInMS = 3333;
 
         private System.Windows.Forms.Timer playStopTime;
         private int loopInMS;
