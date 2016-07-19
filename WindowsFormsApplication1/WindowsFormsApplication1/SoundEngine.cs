@@ -35,9 +35,11 @@ namespace Test
             capture = new WasapiCapture();
             capture.Initialize();
             captureSource = new SoundInSource(capture) { FillWithZeros = true };
+            soundOut = GetSoundOut();
 
             //IWaveSource waveSource = GetSoundSource(@"E:\Musik\Music\Unknown Artist\Unknown Album\Here's to the people.wav");
 
+<<<<<<< HEAD
             soundOut = GetSoundOut();
             EchoEffect echo = new EchoEffect();
             //effects.Add(echo);
@@ -46,8 +48,18 @@ namespace Test
 
             //effects.Add(new DistortionEffect());
             //effects.Add(new ChorusEffect());
+=======
+            //EchoEffect echo = new EchoEffect();
+            //effects.Add(echo);
+            //echo.leftDelay = 500;
+            //echo.rightDelay = 250;
+
+            //effects.Add(new DistortionEffect());
+            //effects.Add(new ChorusEffect());
+
+
+>>>>>>> ff710532a4711b7ded18b1109ffbae0396503833
             soundOut.Initialize(compileEffectChain());
-            
             startPlayback();
         }
 

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -14,6 +15,8 @@ namespace Test
         /************** FIELDS ************/
 
         private static Timer timer;
+        private static Stopwatch stopwatch;
+        private static List<MuGet> instances;
 
         public SoundEngine SoundEngine { get; private set; }
 
@@ -26,13 +29,16 @@ namespace Test
         public event StatusUpdateHandler UpdateStatus;
 
         public delegate void BeatEventHandler(object sender, BeatEventArgs e);
-        public static event BeatEventHandler Beat;
+        public event BeatEventHandler Beat;
+
+        public delegate void TickEventHandler(object sender, EventArgs e);
+        public event TickEventHandler Tick;
 
         public delegate void TempoChangedEventHandler(object sender, TempoChangedEventArgs e);
         public static event TempoChangedEventHandler TempoChanged;
 
         public delegate void WaitForNextBeatEventHandler(object sender, EventArgs e);
-        public static event WaitForNextBeatEventHandler WaitForNextBeat;
+        public event WaitForNextBeatEventHandler WaitForNextBeat;
 
         public delegate void JumpToNextBeatEventHandler(object sender, JumpToNextBeatEventArgs e);
         public static event JumpToNextBeatEventHandler JumpToNextBeat;
@@ -48,16 +54,25 @@ namespace Test
         private static Pen hoverPen = System.Drawing.Pens.White;
         private static Color hoverColor = Color.DarkGray;
 
-        private static Color backgroundColor = Color.LightYellow;
-        private static Color backgroundObjectColor = Color.SteelBlue;
-        private static Color backgroundObjectLightColor = Color.FromArgb(150, backgroundObjectColor);
+        public static Color backgroundColor = Color.LightYellow;
+        public static Color backgroundObjectColor = Color.SteelBlue;
+        public static Color backgroundObjectLightColor = Color.FromArgb(150, backgroundObjectColor);
 
+<<<<<<< HEAD
         private static Color inactiveColor = Color.DarkGray;
         private static Color activeColor = Color.BurlyWood;
 
         private static Color stateDefaultColor = Color.Khaki;
         private static Color stateProgressColor = Color.Yellow;
         private static Color stateFinishColor = Color.Aquamarine;
+=======
+        public static Color inactiveColor = Color.DarkGray;
+        public static Color activeColor = Color.SandyBrown;
+
+        public static Color stateDefaultColor = Color.Beige;
+        public static Color stateProgressColor = Color.Yellow;
+        public static Color stateFinishColor = Color.Aquamarine;
+>>>>>>> ff710532a4711b7ded18b1109ffbae0396503833
 
         public static SolidBrush backgroundBrush = new SolidBrush(backgroundColor);
         public static SolidBrush backgroundObjectBrush = new SolidBrush(backgroundObjectColor);
@@ -114,29 +129,32 @@ namespace Test
         public static int TaktPosition { get; private set; }
 
         // # of current tick in beat (starting from 0)
-        public static int BeatPosition { get; private set; }
+        public static int BeatPosition { get { return (int)(stopwatch.ElapsedMilliseconds - lastPosition); } }
+
+        // amount of current Takt that has already passed (0.0 = nothing, 1.0 = full Takt passed)
+        public static double TaktFractionPassed { get { return (TaktPosition + (BeatPosition / BeatLength)) / TaktLength; } }
 
         // global takt stopwatch
-        public static System.Diagnostics.Stopwatch stopwatchGlobal;
+        public static Stopwatch stopwatchGlobal; // 2ND STOPWATCH
 
 
         /*************** ADDITIONS FOR TEMPO SETTING *************/
 
         public static bool Waiting { get; private set; }
-        public static bool TimerEnabled { get { return timer.Enabled; } }
+        //public static bool TimerEnabled { get { return timer.Enabled; } }
 
         protected void jumpToNextBeat()
         {
             int oldBeatPosition = BeatPosition;
-            BeatPosition = 0;
+            //BeatPosition = 0;
             TaktPosition++;
             if (TaktPosition >= TaktLength)
             {
                 TaktPosition = 0;
-                stopwatchGlobal.Restart();
+                stopwatchGlobal.Restart(); // 2ND STOPWATCH
             }
-            Waiting = false;      // in case we were
-            timer.Enabled = true; // waiting before
+            Waiting = false;          // in case we were
+            timer.Enabled = true;
             if (JumpToNextBeat != null)
             {
                 JumpToNextBeat(this, new JumpToNextBeatEventArgs(TaktPosition, oldBeatPosition));
@@ -152,44 +170,47 @@ namespace Test
 
 
         /************** CONSTRUCTORS ***********/
-        
+
+        static long initPosition;
+        static long lastPosition;
+
         // Static constructor to setup Timer as well as TaktLength and Bpm/BeatLength defaults
         static MuGet() {
             TaktLength = 4;
             bpm = 120; // This sets BeatLength to 500.
+            MuGet.instances = new List<MuGet>();
 
-            timer = new Timer();
-            stopwatchGlobal = new System.Diagnostics.Stopwatch();
-            stopwatchGlobal.Start();
-            timer.Interval = 1;
-            BeatPosition = 0;
+            stopwatchGlobal = new System.Diagnostics.Stopwatch();// 2ND STOPWATCH
+            stopwatchGlobal.Start();// 2ND STOPWATCH
             TaktPosition = 0;
+            timer = new Timer();
+            timer.Interval = 17;
+            stopwatch = new Stopwatch();
+            timer.Start();
+            initPosition = stopwatch.ElapsedMilliseconds;
+            stopwatch.Start();
             timer.Tick += new EventHandler((sender, e) =>
             {
-                BeatPosition++;
-                if (BeatPosition >= BeatLength)
+                foreach (MuGet instance in instances) instance.OnTick(new BeatEventArgs(TaktPosition));
+                if (BeatPosition > BeatLength)
                 {
                     if (Waiting)
                     {
-                        timer.Enabled = false; 
-                        if (WaitForNextBeat != null)
-                        {
-                            WaitForNextBeat(null, new EventArgs()); 
-                        }
+                        stopwatch.Stop();
+                        timer.Stop();
+                        foreach (MuGet instance in instances) instance.OnWaitForNextBeat(new EventArgs());
                     }
                     else
                     {
-                        BeatPosition = 0;
+                        System.Diagnostics.Debug.WriteLine("Beat " + TaktPosition);
+                        lastPosition += BeatLength;
                         TaktPosition++;
                         if (TaktPosition >= TaktLength)
                         {
                             TaktPosition = 0;
-                            stopwatchGlobal.Restart();
+                            stopwatchGlobal.Restart();//2ND STOPWATCH
                         }
-                        if (Beat != null)
-                        {
-                            Beat(null, new BeatEventArgs(TaktPosition));
-                        }
+                        foreach (MuGet instance in instances) instance.OnBeat(new BeatEventArgs(TaktPosition));
                     }
                 }
             });
@@ -203,6 +224,7 @@ namespace Test
             currentPen = borderPen;
             this.BackColor = backgroundColor;
             this.SoundEngine = null;
+            MuGet.instances.Add(this);
         }
 
         // Sound Engine handling
@@ -245,6 +267,16 @@ namespace Test
         protected virtual void OnUpdateStatus(StatusEventArgs e)
         {
             StatusUpdateHandler handler = UpdateStatus;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
+        }
+
+        // Gets raised by the application on each tick.
+        protected virtual void OnTick(EventArgs e)
+        {
+            TickEventHandler handler = Tick;
             if (handler != null)
             {
                 handler(this, e);

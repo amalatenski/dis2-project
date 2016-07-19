@@ -1,9 +1,0 @@
-E:\Niklas\Ausbildung\Uni\Sem12\DIS2\Test\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\Test.exe.config
-E:\Niklas\Ausbildung\Uni\Sem12\DIS2\Test\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\Test.exe
-E:\Niklas\Ausbildung\Uni\Sem12\DIS2\Test\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\Test.pdb
-E:\Niklas\Ausbildung\Uni\Sem12\DIS2\Test\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.csprojResolveAssemblyReference.cache
-E:\Niklas\Ausbildung\Uni\Sem12\DIS2\Test\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Form1.resources
-E:\Niklas\Ausbildung\Uni\Sem12\DIS2\Test\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\Test.Properties.Resources.resources
-E:\Niklas\Ausbildung\Uni\Sem12\DIS2\Test\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.csproj.GenerateResource.Cache
-E:\Niklas\Ausbildung\Uni\Sem12\DIS2\Test\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\Test.exe
-E:\Niklas\Ausbildung\Uni\Sem12\DIS2\Test\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\Test.pdb

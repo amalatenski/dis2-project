@@ -669,6 +669,10 @@ namespace Test
                         playStopWatch.Stop();
 
                         //TODO: stop audio
+<<<<<<< HEAD
+=======
+                        //Edit form Niklas: when you stop the loop it is disposed and cant be started again. I changed it to pause.
+>>>>>>> ff710532a4711b7ded18b1109ffbae0396503833
                         SoundEngine.pauseLoop(loopId);
                     }
                     else if (Play == ButtonStates.Stopping)
