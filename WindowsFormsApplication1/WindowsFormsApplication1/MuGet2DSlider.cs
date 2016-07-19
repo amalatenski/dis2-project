@@ -17,9 +17,8 @@ namespace Test
     {
         //default colors and stuff
         //Pens are used for not filled objects.
-        private static Pen linePen = System.Drawing.Pens.Black;
+        private static Pen linePen = new Pen(stateFinishBrush);
         //Brushes are used to fill objects.
-        private static Brush sliderBrush = System.Drawing.Brushes.Red;
         private static Int32 sliderWidth = 20;
         private static Int32 sliderHeight = 20;
 
@@ -51,7 +50,7 @@ namespace Test
             g.DrawLine(linePen, new System.Drawing.Point(0, getMidpoint(slider).Y), new System.Drawing.Point(this.Width, getMidpoint(slider).Y));
             g.DrawLine(linePen, new System.Drawing.Point(getMidpoint(slider).X, 0), new System.Drawing.Point(getMidpoint(slider).X, this.Height));
 
-            g.FillRectangle(sliderBrush, slider);
+            g.FillRectangle(activeBrush, slider);
 
             //calls the OnPaint of the base class. Without this the border would disappear.
             base.OnPaint(e);
@@ -72,6 +71,7 @@ namespace Test
 
             updateStatus();
             //Repaints the widget. Othewise the new position would not be drawn.
+            linePen = new Pen(stateProgressBrush);
             this.Refresh();
             dragMode = true;
         }
@@ -79,6 +79,8 @@ namespace Test
         protected override void OnMouseUp(System.Windows.Forms.MouseEventArgs e)
         {
             base.OnMouseUp(e);
+            linePen = new Pen(stateFinishBrush);
+            this.Refresh();
             dragMode = false;
         }
 
