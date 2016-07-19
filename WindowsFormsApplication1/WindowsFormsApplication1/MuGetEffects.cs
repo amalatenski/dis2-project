@@ -10,13 +10,13 @@ namespace Test
 {
     class MuGetEffects : MuGet
     {
-        private Brush barColor = Brushes.Orange;
+        private Brush barColor = backgroundObjectLightBrush;
 
         private int sideOffset;
+        private int labelWidth = 40;
         private int inBarOffset = 7;
-        private SoundEngine soundEngine;
-        private Rectangle mainSoundBar;
-        private Rectangle effectBar;
+        private FlowLayoutPanel mainSoundBar;
+        private FlowLayoutPanel effectBar;
 
         private Label mainSoundText;
         private Label echoEffect;
@@ -27,76 +27,100 @@ namespace Test
         private List<Label> effectLabels;
 
 
-        public MuGetEffects(string text, int x, int y, int width, int height, SoundEngine soundEngine) : base(text, x, y, width, height)
+        public MuGetEffects(string text, int x, int y, int width, int height) : base(text, x, y, width, height)
         {
             effectLabels = new List<Label>();
             this.Controls.Add(effectDrag);
-            this.soundEngine = soundEngine;
             sideOffset = height / 11;
-            mainSoundBar = new Rectangle(sideOffset, sideOffset, width - 2 * sideOffset, sideOffset * 4);
-            mainSoundText = new Label {
+            //mainSoundBar = new Rectangle(sideOffset, sideOffset, width - 2 * sideOffset, sideOffset * 4);
+            mainSoundBar = new FlowLayoutPanel
+            {
                 Location = new Point(sideOffset, sideOffset),
+                Width = width - 2 * sideOffset,
                 Height = sideOffset * 4,
-                Width = sideOffset * 2,
+                BackColor = backgroundObjectLightColor,
+                Margin = new Padding(0, 0, inBarOffset, 0)
+            };
+            this.Controls.Add(mainSoundBar);
+            mainSoundText = new Label {
+                //Location = new Point(sideOffset, sideOffset),
+                Height = sideOffset * 4,
+                Width = (2*labelWidth) / 3,
                 Text = "Input",
                 TextAlign = ContentAlignment.MiddleCenter,
-                BackColor = Color.DarkOrange
+                BackColor = backgroundObjectColor
             };
-            this.Controls.Add(mainSoundText);
+            //this.Controls.Add(mainSoundText);
+            mainSoundBar.Controls.Add(mainSoundText);
 
-            effectBar = new Rectangle(sideOffset, sideOffset * 6, width - 2 * sideOffset, sideOffset * 4);
-            echoEffect = new Label
+
+            effectBar = new FlowLayoutPanel
             {
                 Location = new Point(sideOffset, sideOffset * 6),
-                Width = sideOffset * 4,
+                Width = width - 2 * sideOffset,
+                Height = sideOffset * 4,
+                BackColor = backgroundObjectLightColor,
+                Margin = new Padding(0, 0, inBarOffset, 0)
+            };
+            this.Controls.Add(effectBar);
+            //effectBar = new Rectangle(sideOffset, sideOffset * 6, width - 2 * sideOffset, sideOffset * 4);
+            echoEffect = new Label
+            {
+                //Location = new Point(sideOffset, sideOffset * 6),
+                Width = labelWidth,
                 Height = sideOffset * 4,
                 Text = "Echo",
                 TextAlign = ContentAlignment.MiddleCenter,
-                BackColor = Color.DarkOrange
+                BackColor = activeColor
             };
-            this.Controls.Add(echoEffect);
+            //this.Controls.Add(echoEffect);
+            effectBar.Controls.Add(echoEffect);
             echoEffect.MouseDown += Effect_MouseDown;
             echoEffect.MouseUp += Effect_MouseUp;
             echoEffect.MouseMove += Effect_MouseMove;
 
             distortionEffect = new Label
             {
-                Location = new Point(sideOffset * 5 + inBarOffset, sideOffset * 6),
-                Width = sideOffset * 4,
+                //Location = new Point(sideOffset * 5 + inBarOffset, sideOffset * 6),
+                Width = labelWidth,
                 Height = sideOffset * 4,
                 Text = "Distortion",
                 TextAlign = ContentAlignment.MiddleCenter,
-                BackColor = Color.DarkOrange
+                BackColor = activeColor
             };
-            this.Controls.Add(distortionEffect);
+            //this.Controls.Add(distortionEffect);
+            effectBar.Controls.Add(distortionEffect);
             distortionEffect.MouseDown += Effect_MouseDown;
             distortionEffect.MouseUp += Effect_MouseUp;
             distortionEffect.MouseMove += Effect_MouseMove;
 
             chorusEffect = new Label
             {
-                Location = new Point(sideOffset * 9 + inBarOffset * 2, sideOffset * 6),
-                Width = sideOffset * 4,
+                //Location = new Point(sideOffset * 9 + inBarOffset * 2, sideOffset * 6),
+                Width = labelWidth,
                 Height = sideOffset * 4,
                 Text = "Chorus",
                 TextAlign = ContentAlignment.MiddleCenter,
-                BackColor = Color.DarkOrange,
-                BorderStyle = BorderStyle.FixedSingle
+                BackColor = activeColor
             };
-            this.Controls.Add(chorusEffect);
+            //this.Controls.Add(chorusEffect);
+            effectBar.Controls.Add(chorusEffect);
             chorusEffect.MouseDown += Effect_MouseDown;
+            chorusEffect.MouseUp += Effect_MouseUp;
+            chorusEffect.MouseMove += Effect_MouseMove;
         }
-
+        
         private void Effect_MouseUp(object sender, MouseEventArgs e)
         {
             if (effectDragging) {
                 Label tmp = sender as Label;
                 Point location = this.PointToClient(tmp.PointToScreen(e.Location));
-                if (mainSoundBar.Contains(location))
+                if (mainSoundBar.Bounds.Contains(location))
                 {
-                    Label effect = new Label
+                    Console.WriteLine(mainSoundBar.GetChildAtPoint(location));
+                            Label effect = new Label
                     {
-                        Location = new Point(mainSoundBar.X + mainSoundText.Width + inBarOffset*(1+effectLabels.Count) + effectDrag.Width*effectLabels.Count, mainSoundBar.Y),
+                        //Location = new Point(mainSoundBar.Bounds.X + mainSoundText.Width + inBarOffset*(1+effectLabels.Count) + effectDrag.Width*effectLabels.Count, mainSoundBar.Y),
                         Width = effectDrag.Width,
                         Height = effectDrag.Height,
                         Text = effectDrag.Text,
@@ -104,7 +128,8 @@ namespace Test
                         BackColor = effectDrag.BackColor,
                         BorderStyle = effectDrag.BorderStyle
                     };
-                    this.Controls.Add(effect);
+                    //this.Controls.Add(effect);
+                    mainSoundBar.Controls.Add(effect);
                     effectLabels.Add(effect);
                 }
                 else
@@ -114,7 +139,7 @@ namespace Test
             }
             effectDragging = false;
         }
-
+        
         private void Effect_MouseDown(object sender, MouseEventArgs e)
         {
             Label tmp = sender as Label;
@@ -148,8 +173,8 @@ namespace Test
         protected override void OnPaint(PaintEventArgs e)
         {
             Graphics g = e.Graphics;
-            g.FillRectangle(barColor, mainSoundBar);
-            g.FillRectangle(barColor, effectBar);
+            //g.FillRectangle(barColor, mainSoundBar);
+            //g.FillRectangle(barColor, effectBar);
             base.OnPaint(e);
         }
 
