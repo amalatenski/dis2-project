@@ -15,6 +15,9 @@ namespace Test
      */
     class MuGetSlider : MuGet
     {
+        public delegate void actionEndedHandler(object sender, EventArgs e);
+        public event actionEndedHandler ActionEnded;
+
         //default colors and stuff
         //Pens are used for not filled objects.
         private static Pen linePen = new Pen(backgroundObjectBrush);
@@ -79,6 +82,7 @@ namespace Test
         {
             base.OnMouseUp(e);
             dragMode = false;
+            OnActionEnded();
         }
 
         protected override void OnMouseMove(System.Windows.Forms.MouseEventArgs e)
@@ -114,6 +118,14 @@ namespace Test
 
             Rectangle rect = new Rectangle(rectX, rectY, sizeX, sizeY);
             return rect;
+        }
+        protected virtual void OnActionEnded()
+        {
+            actionEndedHandler handler = ActionEnded;
+            if (handler != null)
+            {
+                handler(this, new EventArgs());
+            }
         }
     }
 }
