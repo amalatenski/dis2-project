@@ -39,6 +39,8 @@ namespace WindowsFormsApplication1
             loop.connectSoundEngine(soundEngine);
             this.Controls.Add(loop);
 
+            MuGetEffects effects = new MuGetEffects("effects", 25, 200, 300, 100);
+            this.Controls.Add(effects);
             //this.Controls.Add(new NoteScroller("bla", 25, 200, 300, 100));
             //MuGet muGet = new MuGet2DSlider("bla", 25, 25, 150, 150);
             //this.Controls.Add(muGet);
@@ -50,6 +52,7 @@ namespace WindowsFormsApplication1
 
             soundEngine = new SoundEngine();
             loop.connectSoundEngine(soundEngine);
+            effects.connectSoundEngine(soundEngine);
             audioLoop = soundEngine.newLoop();
         }
 
