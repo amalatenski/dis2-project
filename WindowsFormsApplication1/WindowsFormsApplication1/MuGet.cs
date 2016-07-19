@@ -48,16 +48,16 @@ namespace Test
         private static Pen hoverPen = System.Drawing.Pens.White;
         private static Color hoverColor = Color.DarkGray;
 
-        private static Color backgroundColor = Color.LightYellow;
-        private static Color backgroundObjectColor = Color.SteelBlue;
-        private static Color backgroundObjectLightColor = Color.FromArgb(150, backgroundObjectColor);
+        public static Color backgroundColor = Color.LightYellow;
+        public static Color backgroundObjectColor = Color.SteelBlue;
+        public static Color backgroundObjectLightColor = Color.FromArgb(150, backgroundObjectColor);
 
-        private static Color inactiveColor = Color.DarkGray;
-        private static Color activeColor = Color.SandyBrown;
+        public static Color inactiveColor = Color.DarkGray;
+        public static Color activeColor = Color.SandyBrown;
 
-        private static Color stateDefaultColor = Color.Beige;
-        private static Color stateProgressColor = Color.Yellow;
-        private static Color stateFinishColor = Color.Aquamarine;
+        public static Color stateDefaultColor = Color.Beige;
+        public static Color stateProgressColor = Color.Yellow;
+        public static Color stateFinishColor = Color.Aquamarine;
 
         public static SolidBrush backgroundBrush = new SolidBrush(backgroundColor);
         public static SolidBrush backgroundObjectBrush = new SolidBrush(backgroundObjectColor);
