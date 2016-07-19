@@ -563,6 +563,7 @@ namespace Test
 
                 //TODO: start playing audio
                 SoundEngine.playLoop(loopId);
+                SoundEngine.setVolumeLoop(loopId, 1);
 
                 playStopTime.Start();
                 playStopWatch.Start();
@@ -649,11 +650,13 @@ namespace Test
                     {
                         Volume = ButtonStates.Mute;
                         //TODO: mute sound
+                        SoundEngine.setVolumeLoop(loopId, 0);
                     }
                     else if (Volume == ButtonStates.Mute)
                     {
                         Volume = ButtonStates.Sound;
                         //TODO: unmute sound
+                        SoundEngine.setVolumeLoop(loopId, 1);
                     }
                 }
             }
