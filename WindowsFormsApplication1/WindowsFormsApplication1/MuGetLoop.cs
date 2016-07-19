@@ -15,7 +15,7 @@ namespace Test
      */
     class MuGetLoop : MuGet
     {
-        private static int loopId = 0;
+        private int loopId;
 
         //default colors and stuff
         //Pens are used for not filled objects.
@@ -535,6 +535,7 @@ namespace Test
                 }
 
                 //TODO: start recording
+                loopId = SoundEngine.newLoop();
                 SoundEngine.recordLoop(loopId);
 
                 Volume = ButtonStates.Sound;
@@ -669,10 +670,6 @@ namespace Test
                         playStopWatch.Stop();
 
                         //TODO: stop audio
-<<<<<<< HEAD
-=======
-                        //Edit form Niklas: when you stop the loop it is disposed and cant be started again. I changed it to pause.
->>>>>>> ff710532a4711b7ded18b1109ffbae0396503833
                         SoundEngine.pauseLoop(loopId);
                     }
                     else if (Play == ButtonStates.Stopping)
