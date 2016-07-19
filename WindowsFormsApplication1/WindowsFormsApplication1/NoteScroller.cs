@@ -230,8 +230,8 @@ namespace Test
         private int setPixelInterval()
         {
             double bpm = Bpm;
-            double msPerBeat = 60000 / bpm;
-            double msPerBar = 6 * msPerBeat;
+            double msPerBeat = BeatLength;
+            double msPerBar = 4 * msPerBeat;
 
 
 

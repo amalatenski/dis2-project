@@ -47,7 +47,10 @@ namespace Test
         private bool error = false;
         private int errorCounter = 0;
         private long previous = -1;
-
+        private float volume = 0.5f;
+        private long downTime = 0;
+        private bool mouseDown = false;
+        private bool ignoreClick = false;
 
         private static Pen linePen = new Pen(backgroundObjectColor);
         private static Pen linePen2 = new Pen(backgroundObjectLightColor);
@@ -97,17 +100,20 @@ namespace Test
         private void handleBeat()
         {
             highlightCounter = 0;
+
             if (TaktPosition == 0)
             {
                 soundOutKlack.Stop();
                 soundOutPling.Stop();
                 soundOutPling.Initialize(new LoopStream(CodecFactory.Instance.GetCodec("metronom-pling.wav")) { EnableLoop = false });
+                soundOutPling.Volume = (float)(inputting ? 1.0 : volume);
                 soundOutPling.Play();
             }
             else
             {
                 soundOutKlack.Stop();
                 soundOutKlack.Initialize(new LoopStream(CodecFactory.Instance.GetCodec("metronom-klack.wav")) { EnableLoop = false });
+                soundOutKlack.Volume = (float)(inputting ? 1.0 : volume);
                 soundOutKlack.Play();
             }
             this.ellipses.Add(new Ellipse(ellipsesStopwatch.ElapsedMilliseconds));
@@ -133,13 +139,30 @@ namespace Test
             long now = ellipsesStopwatch.ElapsedMilliseconds;
             if (inputting && (now - previous) > (2 * BeatLength)) { previous = -1; inputting = false; jumpToNextBeat(); }
             for (int i = 0; i < ellipses.Count; i++) ellipses[i].position = (int)(now - ellipses[i].creationTime) / factor;
+
+            if (mouseDown && (now - downTime) > 1300 && !ignoreClick)
+            {
+                MuGetSlider slider = new MuGetSlider("volumeslider", 10, Width / 2 - 50, Width -20, 100, 0, 1);
+                ignoreClick = true;
+                slider.setPosition(volume);
+                slider.UpdateStatus += ((_sender, _e) => { volume = slider.value; });
+                slider.ActionEnded += ((_sender, _e) => { ignoreClick = false; slider.Dispose(); });
+
+                this.Controls.Add(slider);
+                slider.BringToFront();
+            }
+
             this.Refresh();
         }
+
+        protected override void OnMouseDown(System.Windows.Forms.MouseEventArgs e) { mouseDown = true; downTime = ellipsesStopwatch.ElapsedMilliseconds; }
+        protected override void OnMouseUp(System.Windows.Forms.MouseEventArgs e) { mouseDown = false; }
 
         protected override void OnMouseClick(System.Windows.Forms.MouseEventArgs e)
         {
             System.Diagnostics.Debug.WriteLine("MouseClick beginning " + BeatDelta);
             base.OnMouseClick(e);
+            if (ignoreClick) return;
             if (BeatDelta < BeatLength / 5)
             {
                 inputting = true;
